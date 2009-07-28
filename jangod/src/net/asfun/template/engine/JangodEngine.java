@@ -4,14 +4,14 @@ import java.io.Reader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.script.AbstractScriptEngine;
 import javax.script.Bindings;
 import javax.script.ScriptContext;
+import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 
-public class JangodEngine extends AbstractScriptEngine {
+public class JangodEngine implements ScriptEngine {
 	
 	private static final Logger logger = Logger.getLogger("asfun.jandog");
 	private String defaultBindings = "javax.script.SimpleBindings";
@@ -50,12 +50,72 @@ public class JangodEngine extends AbstractScriptEngine {
 	@Override
 	public Object eval(Reader arg0, ScriptContext arg1) throws ScriptException {
 		// TODO Auto-generated method stub
-		return null;
+		return "Hello World";
 	}
 
 	@Override
 	public ScriptEngineFactory getFactory() {
 		return factory;
+	}
+
+	@Override
+	public Object eval(String script) throws ScriptException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object eval(Reader reader) throws ScriptException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object eval(String script, Bindings n) throws ScriptException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object eval(Reader reader, Bindings n) throws ScriptException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object get(String key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Bindings getBindings(int scope) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ScriptContext getContext() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void put(String key, Object value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setBindings(Bindings bindings, int scope) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setContext(ScriptContext context) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

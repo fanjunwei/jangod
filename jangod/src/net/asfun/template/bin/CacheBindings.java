@@ -31,19 +31,25 @@ public class CacheBindings implements Bindings{
 
 	@Override
 	public Object get(Object key) {
+		checkKey(key);
 		return cache.get(key);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object put(String name, Object value) {
+		checkKey(name);
 		return cache.put(name, value);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void putAll(Map<? extends String, ? extends Object> toMerge) {
-		cache.putAll(toMerge);
+		if (toMerge == null) {
+            throw new NullPointerException("toMerge map is null");
+        }
+		for (Map.Entry<? extends String, ? extends Object> entry : toMerge.entrySet()) {
+			put(entry.getKey(), entry.getValue());
+		}
 	}
 
 	@Override
@@ -88,5 +94,17 @@ public class CacheBindings implements Bindings{
 	public Collection<Object> values() {
 		return cache.values();
 	}
+	
+	private void checkKey(Object key) {
+        if (key == null) {
+            throw new NullPointerException("key can not be null");
+        }
+        if (!(key instanceof String)) {
+            throw new ClassCastException("key should be a String");
+        }
+        if (key.equals("")) {
+            throw new IllegalArgumentException("key can not be empty");
+        }
+    }
 
 }
