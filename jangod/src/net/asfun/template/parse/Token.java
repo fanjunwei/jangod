@@ -1,55 +1,19 @@
 package net.asfun.template.parse;
 
-public class Token {
+public abstract class Token implements ParserConstants{
 
-	protected int kind;
-	protected int beginLine, beginColumn, endLine, endColumn;
 	protected String image;
+	protected String content;
 	protected Token next;
 	
 	public String toString() {
-		return image + "-:-" + (char)kind;
+//		return "" + (char)kind + "-:-" + image;
+		return image;
 	}
 	
-	public Token(int tokenKind, String content) {
-		kind = tokenKind;
-		image = content;
-	}
-
-	public int getKind() {
-		return kind;
-	}
-
-	public int getBeginLine() {
-		return beginLine;
-	}
-
-	public void setBeginLine(int beginLine) {
-		this.beginLine = beginLine;
-	}
-
-	public int getBeginColumn() {
-		return beginColumn;
-	}
-
-	public void setBeginColumn(int beginColumn) {
-		this.beginColumn = beginColumn;
-	}
-
-	public int getEndLine() {
-		return endLine;
-	}
-
-	public void setEndLine(int endLine) {
-		this.endLine = endLine;
-	}
-
-	public int getEndColumn() {
-		return endColumn;
-	}
-
-	public void setEndColumn(int endColumn) {
-		this.endColumn = endColumn;
+	public Token(String image2) {
+		image = image2;
+		parse();
 	}
 
 	public String getImage() {
@@ -63,9 +27,25 @@ public class Token {
 	public void setNext(Token next) {
 		this.next = next;
 	}
+	
+	protected abstract void parse();
 
-	public static Token newToken(int tokenKind, char[] image2) {
-		return new Token(tokenKind, new String(image2));
+	public static Token newToken(int tokenKind, char[] image2) throws ParserException {
+		String image = new String(image2);
+		switch( tokenKind ) {
+		case TOKEN_FIXED : 
+			return new FixedToken(image);
+		case TOKEN_NOTE :
+			return new NoteToken(image);
+		case TOKEN_ECHO :
+			return new EchoToken(image);
+		case TOKEN_TAG :
+			return new TagToken(image);
+		case TOKEN_INST :
+			return new InstToken(image);
+		default :
+			throw new ParserException("Creating a token with unknown type" + (char)tokenKind);	
+		}
 	}
 	
 }

@@ -9,7 +9,7 @@ public interface ParserConstants {
 	int TOKEN_TAG = '%';
 	int TOKEN_ECHO = '{';
 	int TOKEN_ECHO2 = '}';
-	int TOKEN_CTRL = '!';
+	int TOKEN_INST = '!';
 
 	int EOF = 0;
 	int PREFIX_NOTE = 5;
