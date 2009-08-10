@@ -4,17 +4,17 @@ package net.asfun.template.parse;
 
 public class TokenManager implements ParserConstants{
 
-	private static char[] is;
-	private static int currPost = 0;
-	private static int tokenStart = 0;
-	private static int tokenLength = 0;
-	private static int tokenKind = -1;
-	private static int length = 0;
-	private static char[] image;
+	private char[] is;
+	private int currPost = 0;
+	private int tokenStart = 0;
+	private int tokenLength = 0;
+	private int tokenKind = -1;
+	private int length = 0;
+	private char[] image;
 	
 //	private static final Logger logger = Logger.getLogger("asfun.jandog");
 	
-	public static void init(String inputstream) {
+	public void init(String inputstream) {
 		is = inputstream.toCharArray();
 		length = inputstream.length();
 		currPost = 0;
@@ -23,7 +23,7 @@ public class TokenManager implements ParserConstants{
 		image = new char[1024];
 	}
 	
-	public static Token getNextToken() throws ParserException {
+	public Token getNextToken() throws ParserException {
 		char c = 0;
 		while ( currPost < length ) {
 			c = is[currPost++];
@@ -98,19 +98,19 @@ public class TokenManager implements ParserConstants{
 		return null;
 	}
 	
-	private static Token getEndToken() throws ParserException {
+	private Token getEndToken() throws ParserException {
 		tokenLength = currPost-tokenStart;
 		System.arraycopy(is, tokenStart, image, 0, tokenLength);
 		return Token.newToken(TOKEN_FIXED, image);
 	}
 	
-	private static Token newToken(int kind) throws ParserException {
+	private Token newToken(int kind) throws ParserException {
 		Token token = Token.newToken(kind, image);
 		image = new char[1024];
 		return token;
 	}
 	
-	private static boolean matchToken(char kind) {
+	private boolean matchToken(char kind) {
 		if ( kind == TOKEN_ECHO ) {
 			return tokenKind == TOKEN_ECHO2;
 		} else if ( kind == TOKEN_ECHO2 ) {

@@ -11,11 +11,15 @@ import javax.script.ScriptEngineFactory;
 import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 
+import net.asfun.template.parse.JangodParser;
+
 public class JangodEngine implements ScriptEngine {
 	
 	private static final Logger logger = Logger.getLogger("asfun.jandog");
 	private String defaultBindings = "javax.script.SimpleBindings";
 	private JangodEngineFactory factory;
+	private ScriptContext context;
+	private JangodParser parser;
 	
 	public JangodEngine() {
 		factory = new JangodEngineFactory();

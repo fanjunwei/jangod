@@ -19,12 +19,13 @@ public class ParserTest {
 			while( (c = fr.read()) != -1) {
 				sb.append((char)c);
 			}
-			TokenManager.init(sb.toString());
-			Token tk = TokenManager.getNextToken();
+			TokenManager tm = new TokenManager();
+			tm.init(sb.toString());
+			Token tk = tm.getNextToken();
 			while ( tk != null ) {
 				System.out.println(tk);
 				System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-				tk = TokenManager.getNextToken();
+				tk = tm.getNextToken();
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

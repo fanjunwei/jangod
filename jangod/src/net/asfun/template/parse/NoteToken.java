@@ -2,7 +2,7 @@ package net.asfun.template.parse;
 
 public class NoteToken extends Token {
 
-	public NoteToken(String image) {
+	public NoteToken(String image) throws ParserException{
 		super(image);
 	}
 
@@ -12,6 +12,10 @@ public class NoteToken extends Token {
 	@Override
 	protected void parse() {
 		content = "";
+	}
+	
+	public String toString() {
+		return "[NOTE]";
 	}
 
 }

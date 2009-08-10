@@ -7,15 +7,19 @@ package net.asfun.template.parse;
  */
 public class InstToken extends Token {
 
-	public InstToken(String image) {
+	public InstToken(String image) throws ParserException{
 		super(image);
 	}
 
 	@Override
-	protected void parse() {
+	protected void parse() throws ParserException{
 		content = image.substring(2, image.length()-2).trim();
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public String toString() {
+		return "[INS]\r\n" + content;
 	}
 
 }
