@@ -5,6 +5,11 @@ public class NoteToken extends Token {
 	public NoteToken(String image) throws ParserException{
 		super(image);
 	}
+	
+	@Override
+	public int getType() {
+		return TOKEN_NOTE;
+	}
 
 	/**
 	 * remove all content, we don't need it.

@@ -1,5 +1,91 @@
 package net.asfun.template.parse;
 
-public interface JangodParser {
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+public class JangodParser implements Iterator<Token>, Iterable<Token>{
+	
+	private static final Logger logger = Logger.getLogger("asfun.jandog");
+	private TokenManager tm = new TokenManager();
+	private Token token;
+	private boolean proceeding = true;
+
+	public JangodParser(String script) {
+		tm.init(script);
+	}
+
+	public JangodParser(Reader reader) throws ParserException {
+		BufferedReader br = new BufferedReader(reader);
+		StringBuffer buff = new StringBuffer();
+		String line;
+		try {
+			while( (line=br.readLine()) != null ) {
+				buff.append(line);
+				buff.append("\n");
+			}
+		} catch (IOException e) {
+			throw new ParserException("Read template reader fault.");
+		}
+		tm.init(buff.toString());
+	}
+
+	@Override
+	public boolean hasNext(){
+		if ( proceeding ) {
+			try {
+				token = tm.getNextToken();
+				if ( token != null ) {
+					return true;
+				} else {
+					proceeding = false;
+					return false;
+				}
+			} catch (ParserException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e.getCause());
+				token = null;
+				//TODO go on proceeding or not
+			}
+		}	
+		return false;
+	}
+
+	@Override
+	public Token next() {
+		if ( proceeding ) {
+			if ( token == null ) {
+				try {
+					Token tk = tm.getNextToken();
+					if ( tk == null ) {
+						proceeding = false;
+						throw new NoSuchElementException();
+					}
+					return tk;
+				} catch (ParserException e) {
+					logger.log(Level.SEVERE, e.getMessage(), e.getCause());
+					//TODO go on proceeding or not
+					throw new NoSuchElementException();
+				}
+			} else {
+				Token last = token;
+				token = null;
+				return last;
+			}
+		}
+		throw new NoSuchElementException();
+	}
+
+	@Override
+	public void remove() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Iterator<Token> iterator() {
+		return this;
+	}
 }

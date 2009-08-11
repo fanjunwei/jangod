@@ -10,6 +10,11 @@ public class InstToken extends Token {
 	public InstToken(String image) throws ParserException{
 		super(image);
 	}
+	
+	@Override
+	public int getType() {
+		return TOKEN_INST;
+	}
 
 	@Override
 	protected void parse() throws ParserException{

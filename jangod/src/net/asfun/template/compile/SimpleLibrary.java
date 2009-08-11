@@ -3,11 +3,12 @@ package net.asfun.template.compile;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public abstract class SimpleLibrary<T> {
 
 	private Map<String, T> lib = new HashMap<String, T>();
 	
-	public SimpleLibrary() {
+	protected SimpleLibrary() {
 		initialize();
 	}
 	

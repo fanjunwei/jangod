@@ -6,6 +6,11 @@ public class FixedToken extends Token{
 		super(image);
 	}
 	
+	@Override
+	public int getType() {
+		return TOKEN_FIXED;
+	}
+	
 	/**
 	 * change "\{" and "\}" to "{" or "}"
 	 */

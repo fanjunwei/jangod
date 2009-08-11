@@ -14,7 +14,13 @@ public abstract class Token implements ParserConstants{
 		return image;
 	}
 	
+	public String toString() {
+		return image;
+	}
+	
 	protected abstract void parse() throws ParserException;
+	
+	public abstract int getType();
 
 	public static Token newToken(int tokenKind, char[] image2) throws ParserException {
 		String image = String.valueOf(image2).trim();

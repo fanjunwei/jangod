@@ -8,6 +8,11 @@ public class TagToken extends Token {
 	public TagToken(String image) throws ParserException{
 		super(image);
 	}
+	
+	@Override
+	public int getType() {
+		return TOKEN_TAG;
+	}
 
 	/**
 	 * Get tag name
@@ -27,7 +32,11 @@ public class TagToken extends Token {
 	}
 	
 	public String getTagName() {
-		return tagName;
+		return tagName.toLowerCase();
+	}
+	
+	public String getHelpers() {
+		return helpers;
 	}
 	
 	public String toString() {

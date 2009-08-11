@@ -11,21 +11,28 @@ public class EchoToken extends Token {
 
 	private String var;
 	
-	private List<Object> filters;
+	private List<String> filters;
+	
+	private List<String[]> argss;
 	
 	public String getVariable() {
 		return var;
 	}
 	
 	/**
-	 * get the filters with their args
-	 * List item Object :
-	 * 		filter without arg is instanceof String
-	 * 		filter with args is instanceof List<String> 
+	 * get the filters
 	 * @return filters
 	 */
-	public List<Object> getFilters() {
+	public List<String> getFilters() {
 		return filters;
+	}
+	
+	/**
+	 * get filters' args
+	 * @return
+	 */
+	public List<String[]> getArgss() {
+		return argss;
 	}
 
 	/**
@@ -42,7 +49,8 @@ public class EchoToken extends Token {
 	@Override
 	protected void parse() throws ParserException {
 		content = image.substring(2, image.length()-2).trim();
-		filters = new ArrayList<Object>();
+		filters = new ArrayList<String>();
+		argss = new ArrayList<String[]>();
 		//image = obj.attr.attr|filter1:"ar|g1",arg2|filter2:'a:",b"c'
 		int pointer = content.indexOf('|');
 		if ( pointer < 0 ) {
@@ -63,25 +71,28 @@ public class EchoToken extends Token {
 		//filterString = filter1
 		if ( postColon == postPipe ) {
 			filters.add(filterString);
+			argss.add(null);
 			content = "";
 		}
 		//filterString = filter1:argString|filter2
 		if ( postColon > 0 && ( postColon < postPipe || postPipe < 0 )) {
-			List<String> filter = new ArrayList<String>();
-			filter.add(filterString.substring(0, postColon).trim());
+			List<String> args = new ArrayList<String>();
+			filters.add(filterString.substring(0, postColon).trim());
 			String argString = filterString.substring(postColon+1).trim();
 			do {
-				argString = parseArg(argString, filter);
+				argString = parseArg(argString, args);
 			} while(argString != null);
-			filters.add(filter.toArray());
-		} 
+			argss.add(args.toArray(new String[] {}));
+		}
+		//filterString = filter1|fitler2:arg
 		if ( postPipe > 0 && ( postPipe < postColon || postColon < 0 )) {
 			filters.add(filterString.substring(0, postPipe).trim());
+			argss.add(null);
 			content = filterString.substring(postPipe+1).trim();
 		}
 	}
 	
-	private String parseArg(String argString, List<String> filter) throws ParserException {
+	private String parseArg(String argString, List<String> args) throws ParserException {
 		//"ar|g1:",arg2   or 'a:"b"|c'|filter2  or arg3
 		if( argString.charAt(0) == '"' ) {
 			argString = argString.substring(1);
@@ -89,7 +100,7 @@ public class EchoToken extends Token {
 			if ( post < 0 ) {
 				throw new ParserException("filter argument doesn't match quotes");
 			} else {
-				filter.add(argString.substring(0,post));
+				args.add(argString.substring(0,post));
 				if( post < argString.length() - 2) {
 					argString = argString.substring(post+1).trim();
 					if ( argString.charAt(0) == '|' ) {
@@ -111,7 +122,7 @@ public class EchoToken extends Token {
 			if ( post < 0 ) {
 				throw new ParserException("filter argument doesn't match quotes");
 			} else {
-				filter.add(argString.substring(0,post));
+				args.add(argString.substring(0,post));
 				if( post < argString.length() - 2) {
 					argString = argString.substring(post+1).trim();
 					if ( argString.charAt(0) == '|' ) {
@@ -131,13 +142,13 @@ public class EchoToken extends Token {
 			int postComma = argString.indexOf(',');
 			int postPipe = argString.indexOf('|');
 			if ( postComma > 0 && ( postPipe > postComma || postPipe < 0)) {
-				filter.add(argString.substring(0,postComma).trim());
+				args.add(argString.substring(0,postComma).trim());
 				if( postComma < argString.length() - 1) {
 					return argString.substring(postComma+1).trim();
 				}
 			}
 			if ( postPipe > 0 && ( postPipe < postComma || postComma < 0)) {
-				filter.add(argString.substring(0,postPipe).trim());
+				args.add(argString.substring(0,postPipe).trim());
 				if( postPipe < argString.length() - 1) {
 					//RETURN NULL start a new filter parse
 					content = argString.substring(postPipe+1).trim();
@@ -145,27 +156,31 @@ public class EchoToken extends Token {
 				}
 			}
 			if ( postComma == postPipe ) {
-				filter.add(argString);
+				args.add(argString);
 			}
 		}
 		content = "";
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
 	public String toString() {
 		String s = "[VAR]\r\n" +var;
-		for(Object fi : filters) {
-			if ( fi instanceof String) {
-				s += "\r\n\t" + fi;
-			} else {
-				String[] fig = (String[])fi;
-				s += "\r\n";
-				for(String str : fig) {
-					s += "\t" + str;
+		int i,j;
+		for (i=0; i<filters.size(); i++) {
+			s += "\r\n\t" + filters.get(i);
+			String[] args = argss.get(i);
+			if ( args != null) {
+				s += "\r\n\t";
+				for(j=0; j<args.length; j++) {
+					s += "\t" + args[j];
 				}
 			}
 		}
 		return s;
+	}
+
+	@Override
+	public int getType() {
+		return TOKEN_ECHO;
 	}
 }

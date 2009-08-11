@@ -11,22 +11,31 @@ import javax.script.ScriptEngineFactory;
 import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 
+import net.asfun.template.compile.CompilerException;
+import net.asfun.template.compile.JangodCompiler;
 import net.asfun.template.parse.JangodParser;
+import net.asfun.template.parse.ParserException;
 
 public class JangodEngine implements ScriptEngine {
 	
 	private static final Logger logger = Logger.getLogger("asfun.jandog");
 	private String defaultBindings = "javax.script.SimpleBindings";
 	private JangodEngineFactory factory;
-	private ScriptContext context;
-	private JangodParser parser;
+	private ScriptContext context = new JangodContext();
+	JangodCompiler compiler = new JangodCompiler();
 	
 	public JangodEngine() {
 		factory = new JangodEngineFactory();
+		//TODO use CacheBindings for global scope
+		//TODO set default var like now, version, etc.
+		context.setBindings(createBindings(), ScriptContext.GLOBAL_SCOPE);
 	}
 	
 	public JangodEngine(JangodEngineFactory fac) {
 		factory = fac;
+		//TODO use CacheBindings for global scope
+		//TODO set default var like now, version, etc.
+		context.setBindings(createBindings(), ScriptContext.GLOBAL_SCOPE);
 	}
 
 	@Override
@@ -46,15 +55,32 @@ public class JangodEngine implements ScriptEngine {
 	}
 
 	@Override
-	public Object eval(String arg0, ScriptContext arg1) throws ScriptException {
-		// TODO Auto-generated method stub
-		return null;
+	public Object eval(String script, ScriptContext ctx) throws ScriptException {
+		JangodParser parser = new JangodParser(script);
+		JangodCompiler tempCompiler = new JangodCompiler();
+		tempCompiler.setContext(ctx);
+		try {
+			return tempCompiler.render(parser);
+		} catch (CompilerException e) {
+			throw new ScriptException(e.getMessage());
+		}
 	}
 
 	@Override
-	public Object eval(Reader arg0, ScriptContext arg1) throws ScriptException {
-		// TODO Auto-generated method stub
-		return "Hello World";
+	public Object eval(Reader reader, ScriptContext ctx) throws ScriptException {
+		JangodParser parser;
+		try {
+			parser = new JangodParser(reader);
+		} catch (ParserException e) {
+			throw new ScriptException(e.getMessage());
+		}
+		JangodCompiler tempCompiler = new JangodCompiler();
+		tempCompiler.setContext(ctx);
+		try {
+			return tempCompiler.render(parser);
+		} catch (CompilerException e) {
+			throw new ScriptException(e.getMessage());
+		}
 	}
 
 	@Override
@@ -64,62 +90,94 @@ public class JangodEngine implements ScriptEngine {
 
 	@Override
 	public Object eval(String script) throws ScriptException {
-		// TODO Auto-generated method stub
-		return null;
+		JangodParser parser = new JangodParser(script);
+		compiler.setContext(context);
+		try {
+			return compiler.render(parser);
+		} catch (CompilerException e) {
+			throw new ScriptException(e.getMessage());
+		}
 	}
 
 	@Override
 	public Object eval(Reader reader) throws ScriptException {
-		// TODO Auto-generated method stub
-		return null;
+		JangodParser parser;
+		try {
+			parser = new JangodParser(reader);
+		} catch (ParserException e) {
+			throw new ScriptException(e.getMessage());
+		}
+		compiler.setContext(context);
+		try {
+			return compiler.render(parser);
+		} catch (CompilerException e) {
+			throw new ScriptException(e.getMessage());
+		}
 	}
 
 	@Override
 	public Object eval(String script, Bindings n) throws ScriptException {
-		// TODO Auto-generated method stub
-		return null;
+		JangodParser parser = new JangodParser(script);
+		JangodCompiler tempCompiler = new JangodCompiler();
+		ScriptContext ctx = new JangodContext();
+		ctx.setBindings(context.getBindings(ScriptContext.GLOBAL_SCOPE), ScriptContext.GLOBAL_SCOPE);
+		ctx.setBindings(n, ScriptContext.ENGINE_SCOPE);
+		tempCompiler.setContext(ctx);
+		try {
+			return tempCompiler.render(parser);
+		} catch (CompilerException e) {
+			throw new ScriptException(e.getMessage());
+		}
 	}
 
 	@Override
 	public Object eval(Reader reader, Bindings n) throws ScriptException {
-		// TODO Auto-generated method stub
-		return null;
+		JangodParser parser;
+		try {
+			parser = new JangodParser(reader);
+		} catch (ParserException e) {
+			throw new ScriptException(e.getMessage());
+		}
+		JangodCompiler tempCompiler = new JangodCompiler();
+		ScriptContext ctx = new JangodContext();
+		ctx.setBindings(context.getBindings(ScriptContext.GLOBAL_SCOPE), ScriptContext.GLOBAL_SCOPE);
+		ctx.setBindings(n, ScriptContext.ENGINE_SCOPE);
+		tempCompiler.setContext(ctx);
+		try {
+			return tempCompiler.render(parser);
+		} catch (CompilerException e) {
+			throw new ScriptException(e.getMessage());
+		}
 	}
 
 	@Override
 	public Object get(String key) {
-		// TODO Auto-generated method stub
-		return null;
+		return getBindings(ScriptContext.ENGINE_SCOPE).get(key);
 	}
 
 	@Override
 	public Bindings getBindings(int scope) {
-		// TODO Auto-generated method stub
-		return null;
+		return context.getBindings(scope);
 	}
 
 	@Override
 	public ScriptContext getContext() {
-		// TODO Auto-generated method stub
-		return null;
+		return context;
 	}
 
 	@Override
 	public void put(String key, Object value) {
-		// TODO Auto-generated method stub
-		
+		getBindings(ScriptContext.ENGINE_SCOPE).put(key, value);
 	}
 
 	@Override
 	public void setBindings(Bindings bindings, int scope) {
-		// TODO Auto-generated method stub
-		
+		context.setBindings(bindings, scope);
 	}
 
 	@Override
-	public void setContext(ScriptContext context) {
-		// TODO Auto-generated method stub
-		
+	public void setContext(ScriptContext scontext) {
+		context = scontext;
 	}
 
 }
