@@ -2,8 +2,8 @@ package net.asfun.template.compile;
 
 import java.util.List;
 
-import net.asfun.template.filter.FilterLibrary;
 import net.asfun.template.parse.EchoToken;
+import net.asfun.template.util.JangodLogger;
 import net.asfun.template.util.ObjectValue;
 
 public class VariableNode implements Node{
@@ -11,7 +11,7 @@ public class VariableNode implements Node{
 	public VariableNode(EchoToken tk) {
 		token = tk;
 	}
-	
+
 	private EchoToken token;
 
 	@Override
@@ -25,18 +25,24 @@ public class VariableNode implements Node{
 		List<String[]> argss = token.getArgss();
 		int i,j;
 		String[] args;
+		Filter filter;
 		for(i=0; i<filters.size(); i++) {
+			try {
+				filter = FilterLibrary.getFilter(filters.get(i));
+			} catch (CompilerException ce) {
+				JangodLogger.warning("Using an unregistered filter >>> " + filters.get(i));
+				continue;
+			}
 			args = argss.get(i);
 			if ( args == null ) {
-				var = FilterLibrary.getFilter(filters.get(i)).filter(var);
+				var = filter.filter(var);
 			} else {
 				for(j=0; j<args.length; j++) {
-					var = FilterLibrary.getFilter(filters.get(i)).filter(var, args);
+					var = filter.filter(var, args);
 				}
 			}
 		}
 		return ObjectValue.printable(var);
 	}
-
 
 }

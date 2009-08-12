@@ -2,6 +2,7 @@ package net.asfun.template.engine;
 
 import java.io.Reader;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.script.Bindings;
@@ -10,6 +11,10 @@ import javax.script.SimpleBindings;
 
 
 public class JangodContext implements ScriptContext{
+	
+	private Writer errw;
+	private Writer wtr;
+	private Reader rd;
 	
 	private static ThreadLocal<Bindings> engineScope = new ThreadLocal<Bindings>();
 	private Bindings globalScope = new SimpleBindings();
@@ -56,26 +61,25 @@ public class JangodContext implements ScriptContext{
 
 	@Override
 	public Writer getErrorWriter() {
-		// TODO Auto-generated method stub
-		return null;
+		return errw;
 	}
 
 	@Override
 	public Reader getReader() {
-		// TODO Auto-generated method stub
-		return null;
+		return rd;
 	}
 
 	@Override
 	public List<Integer> getScopes() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Integer> scopes = new ArrayList<Integer>();
+		scopes.add(ScriptContext.ENGINE_SCOPE);
+		scopes.add(ScriptContext.GLOBAL_SCOPE);
+		return scopes;
 	}
 
 	@Override
 	public Writer getWriter() {
-		// TODO Auto-generated method stub
-		return null;
+		return wtr;
 	}
 
 	@Override
@@ -111,20 +115,17 @@ public class JangodContext implements ScriptContext{
 
 	@Override
 	public void setErrorWriter(Writer writer) {
-		// TODO Auto-generated method stub
-		
+		errw = writer;
 	}
 
 	@Override
 	public void setReader(Reader reader) {
-		// TODO Auto-generated method stub
-		
+		rd = reader;
 	}
 
 	@Override
 	public void setWriter(Writer writer) {
-		// TODO Auto-generated method stub
-		
+		wtr = writer;
 	}
 
 }

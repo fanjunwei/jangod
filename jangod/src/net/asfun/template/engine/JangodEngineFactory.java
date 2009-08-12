@@ -6,8 +6,7 @@ import java.util.List;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 
-
-public class JangodEngineFactory implements ScriptEngineFactory{
+public class JangodEngineFactory implements ScriptEngineFactory {
 
 	@Override
 	public String getEngineName() {
@@ -41,8 +40,7 @@ public class JangodEngineFactory implements ScriptEngineFactory{
 
 	@Override
 	public String getMethodCallSyntax(String obj, String m, String... args) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -61,21 +59,31 @@ public class JangodEngineFactory implements ScriptEngineFactory{
 
 	@Override
 	public String getOutputStatement(String toDisplay) {
-		// TODO Auto-generated method stub
-		// display the toDisplay script in script file without parse it.
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public Object getParameter(String key) {
-		// TODO Auto-generated method stub
-		return null;
+		if ("THREADING".equals(key))
+			return "THREAD-ISOLATED";
+		else if (ScriptEngine.ENGINE.equals(key))
+			return getEngineName();
+		else if (ScriptEngine.ENGINE_VERSION.equals(key))
+			return getEngineVersion();
+		else if (ScriptEngine.NAME.equals(key))
+			return getEngineName();
+		else if (ScriptEngine.LANGUAGE.equals(key))
+			return getLanguageName();
+		else if (ScriptEngine.LANGUAGE_VERSION.equals(key))
+			return getLanguageVersion();
+		else
+			return null;
 	}
 
 	@Override
 	public String getProgram(String... statements) {
 		StringBuilder buff = new StringBuilder();
-		for(String statement : statements) {
+		for (String statement : statements) {
 			buff.append(statement).append("\n");
 		}
 		return buff.toString();
@@ -85,7 +93,7 @@ public class JangodEngineFactory implements ScriptEngineFactory{
 	public ScriptEngine getScriptEngine() {
 		return new JangodEngine(this);
 	}
-	
+
 	@Override
 	public String toString() {
 		return getEngineName() + " v" + getEngineVersion();

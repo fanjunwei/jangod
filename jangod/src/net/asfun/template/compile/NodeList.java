@@ -2,18 +2,23 @@ package net.asfun.template.compile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import net.asfun.template.parse.EchoToken;
 import net.asfun.template.parse.JangodParser;
 import net.asfun.template.parse.TagToken;
 import net.asfun.template.parse.Token;
+import net.asfun.template.util.JangodLogger;
 
 public class NodeList {
-
-	private static final Logger logger = Logger.getLogger("asfun.jandog");
 	
-	public static List<Node> makeList(JangodParser parser, String endTagName) {
+	/**
+	 * general the node tree
+	 * @param parser
+	 * @param endTagName
+	 * @param path
+	 * @return
+	 */
+	public static List<Node> makeList(JangodParser parser, String endTagName, int level) {
 		List<Node> nodes = new ArrayList<Node>();
 		Token token;
 		TagToken tag;
@@ -38,14 +43,14 @@ public class NodeList {
 						return nodes;
 					}
 					try {
-						TagNode tn = new TagNode((TagToken) token, parser);
+						TagNode tn = new TagNode((TagToken) token, parser, level);
 						nodes.add(tn);
 					} catch (CompilerException e) {
-						logger.warning("Can't create node with token >>> " + token);
+						JangodLogger.warning("Can't create node with token >>> " + token);
 					}
 					break;
 				default :
-					logger.warning("Unknown type token >>> " + token);
+					JangodLogger.warning("Unknown type token >>> " + token);
 			}
 		}
 		return nodes;

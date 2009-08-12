@@ -22,19 +22,18 @@ public abstract class Token implements ParserConstants{
 	
 	public abstract int getType();
 
-	public static Token newToken(int tokenKind, char[] image2) throws ParserException {
-		String image = String.valueOf(image2).trim();
+	public static Token newToken(int tokenKind, String image2) throws ParserException {
 		switch( tokenKind ) {
 		case TOKEN_FIXED : 
-			return new FixedToken(image);
+			return new FixedToken(image2);
 		case TOKEN_NOTE :
-			return new NoteToken(image);
+			return new NoteToken(image2);
 		case TOKEN_ECHO :
-			return new EchoToken(image);
+			return new EchoToken(image2);
 		case TOKEN_TAG :
-			return new TagToken(image);
+			return new TagToken(image2);
 		case TOKEN_INST :
-			return new InstToken(image);
+			return new InstToken(image2);
 		default :
 			throw new ParserException("Creating a token with unknown type" + (char)tokenKind);	
 		}

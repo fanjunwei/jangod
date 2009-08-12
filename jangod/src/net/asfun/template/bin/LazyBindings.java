@@ -5,19 +5,17 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.script.Bindings;
 import javax.script.ScriptException;
+
+import net.asfun.template.util.JangodLogger;
 
 public class LazyBindings implements Bindings{
 	
 	private Map<String, Object> bins;
 	private Set<String> keys;
 	private Map<String, String> lazies;
-	
-	private static final Logger logger = Logger.getLogger("asfun.jandog");
 	
 	public LazyBindings() {
 		bins = new HashMap<String, Object>();
@@ -63,7 +61,7 @@ public class LazyBindings implements Bindings{
 			Object value = method.invoke(null, new Object[]{});
 			return value;
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, e.getMessage(), e.getCause());
+			JangodLogger.severe(e.getMessage(), e.getCause());
 		} 
 		return null;
 	}

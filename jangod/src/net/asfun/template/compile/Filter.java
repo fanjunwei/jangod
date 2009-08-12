@@ -1,8 +1,9 @@
-package net.asfun.template.filter;
+package net.asfun.template.compile;
 
-import net.asfun.template.compile.CompilerException;
 
 public interface Filter {
 
 	Object filter(Object object, String... arg) throws CompilerException;
+	
+	public String getFilterName();
 }

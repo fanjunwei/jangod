@@ -1,7 +1,6 @@
-package net.asfun.template.filter;
+package net.asfun.template.compile;
 
-import net.asfun.template.compile.CompilerException;
-import net.asfun.template.compile.SimpleLibrary;
+import net.asfun.template.filter.*;
 
 public class FilterLibrary extends SimpleLibrary<Filter>{
 
@@ -13,7 +12,8 @@ public class FilterLibrary extends SimpleLibrary<Filter>{
 	
 	@Override
 	protected void initialize() {
-		register("default", new DefaultFilter());
+		Filter defaultFilter = new DefaultFilter();
+		register(defaultFilter.getFilterName(), defaultFilter);
 	}
 	
 	public static Filter getFilter(String filterName) throws CompilerException {

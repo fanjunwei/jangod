@@ -1,6 +1,7 @@
 package net.asfun.template.filter;
 
 import net.asfun.template.compile.CompilerException;
+import net.asfun.template.compile.Filter;
 import net.asfun.template.util.ObjectTruthValue;
 
 public class DefaultFilter implements Filter {
@@ -11,6 +12,11 @@ public class DefaultFilter implements Filter {
 			throw new CompilerException("argument miss match");
 		}
 		return ObjectTruthValue.evaluate(object) ? object : arg;
+	}
+
+	@Override
+	public String getFilterName() {
+		return "default";
 	}
 
 }

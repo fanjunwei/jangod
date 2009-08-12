@@ -1,7 +1,5 @@
 package net.asfun.template.parse;
 
-//import java.util.logging.Logger;
-
 public class TokenManager implements ParserConstants{
 
 	private char[] is;
@@ -10,9 +8,7 @@ public class TokenManager implements ParserConstants{
 	private int tokenLength = 0;
 	private int tokenKind = -1;
 	private int length = 0;
-	private char[] image;
-	
-//	private static final Logger logger = Logger.getLogger("asfun.jandog");
+	private int lastStart = 0;
 	
 	public void init(String inputstream) {
 		is = inputstream.toCharArray();
@@ -20,7 +16,7 @@ public class TokenManager implements ParserConstants{
 		currPost = 0;
 		tokenStart = 0;
 		tokenKind = -1;
-		image = new char[1024];
+		lastStart = 0;
 	}
 	
 	public Token getNextToken() throws ParserException {
@@ -47,7 +43,7 @@ public class TokenManager implements ParserConstants{
 						tokenLength = currPost-tokenStart-1;
 						if ( tokenLength > 0 ) {
 							//start a new token
-							System.arraycopy(is, tokenStart, image, 0, tokenLength);
+							lastStart = tokenStart;
 							tokenStart = --currPost;
 							int kind = tokenKind;
 							tokenKind = c;
@@ -80,7 +76,7 @@ public class TokenManager implements ParserConstants{
 						tokenLength = currPost-tokenStart+1;
 						if ( tokenLength > 0 ) {
 							//start a new token
-							System.arraycopy(is, tokenStart, image, 0, tokenLength);
+							lastStart = tokenStart;
 							tokenStart = ++currPost;
 							int kind = tokenKind;
 							tokenKind = TOKEN_FIXED;
@@ -92,7 +88,9 @@ public class TokenManager implements ParserConstants{
 				}
 				break;
 			default:
-				//nothing continue;
+				if (tokenKind == -1) {
+					tokenKind = TOKEN_FIXED;
+				}
 			}
 		}
 		return null;
@@ -100,13 +98,11 @@ public class TokenManager implements ParserConstants{
 	
 	private Token getEndToken() throws ParserException {
 		tokenLength = currPost-tokenStart;
-		System.arraycopy(is, tokenStart, image, 0, tokenLength);
-		return Token.newToken(TOKEN_FIXED, image);
+		return Token.newToken(TOKEN_FIXED, String.valueOf(is, tokenStart, tokenLength));
 	}
 	
 	private Token newToken(int kind) throws ParserException {
-		Token token = Token.newToken(kind, image);
-		image = new char[1024];
+		Token token = Token.newToken(kind, String.copyValueOf(is, lastStart, tokenLength));
 		return token;
 	}
 	

@@ -5,8 +5,9 @@ import java.util.List;
 
 import net.asfun.template.compile.CompilerException;
 import net.asfun.template.compile.JangodCompiler;
+import net.asfun.template.compile.Tag;
+import net.asfun.template.util.HelperStringTokenizer;
 import net.asfun.template.util.ObjectIterator;
-import net.asfun.template.util.QuotedStringTokenizer;
 import net.asfun.template.compile.Node;
 
 /**
@@ -21,18 +22,25 @@ public class ForTag implements Tag {
 
 	@Override
 	public String compile(List<Node> carries, JangodCompiler compiler) throws CompilerException {
-		Iterator<Object> it = ObjectIterator.toIterator(compiler.resolveVariable(items));
-		if (it == null) {
-			return "";
+//		Iterator<Object> it = ObjectIterator.toIterator(compiler.resolveVariable(items));
+//		if (it == null) {
+//			return "";
+//		}
+//		StringBuffer buff = new StringBuffer();
+//		while ( it.hasNext() ) {
+//			compiler.setTempVar(item, it.next());
+//			for(Node node : carries) {
+//				buff.append(node.render(compiler));
+//			}
+//		}
+//		return buff.toString();
+		StringBuffer sb = new StringBuffer();
+		sb.append("<" + getTagName() + ">");
+		for(Node node : carries) {
+			sb.append(node.render(compiler));
 		}
-		StringBuffer buff = new StringBuffer();
-		while ( it.hasNext() ) {
-			compiler.setVariable(item, it.next());
-			for(Node node : carries) {
-				buff.append(node.render(compiler));
-			}
-		}
-		return buff.toString();
+		sb.append("</" + getTagName() + ">");
+		return sb.toString();
 	}
 
 	/**
@@ -42,7 +50,7 @@ public class ForTag implements Tag {
 	 */
 	@Override
 	public void initialize(String helpers) throws CompilerException {
-		String[] helper = new QuotedStringTokenizer(helpers).allTokens();
+		String[] helper = new HelperStringTokenizer(helpers).allTokens();
 		if (helper.length != 3) {
 			throw new CompilerException("for tag expects three helpers:" + helpers);
 		}
@@ -53,6 +61,11 @@ public class ForTag implements Tag {
 	@Override
 	public String getEndTagName() {
 		return "endfor";
+	}
+
+	@Override
+	public String getTagName() {
+		return "for";
 	}
 
 }

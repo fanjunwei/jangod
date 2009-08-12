@@ -11,12 +11,18 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import net.asfun.template.engine.JangodContext;
+
 public class ScriptTest {
 
 	@SuppressWarnings("unchecked")
 	public static void test1() {
 		ScriptEngineManager sem = new ScriptEngineManager();
 		ScriptEngine engine = sem.getEngineByName("Jangod");
+		ScriptContext global = new JangodContext();
+		global.setBindings(engine.getBindings(ScriptContext.GLOBAL_SCOPE), ScriptContext.GLOBAL_SCOPE);
+		global.setAttribute("TPL_ROOT_DIR", "D:/workspace/jvalog/war/themes/default/", ScriptContext.GLOBAL_SCOPE);
+		engine.setContext(global);
 		engine.setBindings(engine.createBindings(), ScriptContext.ENGINE_SCOPE);
 		Reader reader;
 		try {
@@ -27,7 +33,7 @@ public class ScriptTest {
 			site.put("title", "web site title");
 			engine.put("page", page);
 			engine.put("site", site);
-			reader = new FileReader("D:/workspace/jangod/tpl/test.html");
+			reader = new FileReader("D:/workspace/jvalog/war/themes/default/post.html");
 			Object obj = engine.eval(reader);
 			System.out.println(obj);
 		} catch (FileNotFoundException e) {

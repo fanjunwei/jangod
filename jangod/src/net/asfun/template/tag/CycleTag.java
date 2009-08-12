@@ -8,15 +8,11 @@ import net.asfun.template.compile.Node;
 import net.asfun.template.compile.Tag;
 import net.asfun.template.util.HelperStringTokenizer;
 
-/**
- * {% if a %}
- * {% if a and b and c %}
- * {% if c or d or a %}
- * {% if not a and b and not c and d %}
- * @author fangchq
- *
- */
-public class IfTag implements Tag {
+public class CycleTag implements Tag{
+	
+	private String[] values;
+	private String current;
+	
 
 	@Override
 	public String compile(List<Node> carries, JangodCompiler compiler)
@@ -33,18 +29,19 @@ public class IfTag implements Tag {
 
 	@Override
 	public String getEndTagName() {
-		return "endif";
+		return null;
 	}
 
 	@Override
 	public void initialize(String helpers) throws CompilerException {
-		String[] helper = new HelperStringTokenizer(helpers).allTokens();
-		//TODO 
+		HelperStringTokenizer tk = new HelperStringTokenizer(helpers);
+		String[] helper = tk.allTokens();
+		
 	}
 
 	@Override
 	public String getTagName() {
-		return "if";
+		return "cycle";
 	}
 
 }

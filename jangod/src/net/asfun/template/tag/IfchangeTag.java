@@ -5,6 +5,7 @@ import java.util.List;
 import net.asfun.template.compile.CompilerException;
 import net.asfun.template.compile.JangodCompiler;
 import net.asfun.template.compile.Node;
+import net.asfun.template.compile.Tag;
 
 public class IfchangeTag implements Tag{
 	
@@ -15,7 +16,13 @@ public class IfchangeTag implements Tag{
 			throws CompilerException {
 		Object test = compiler.resolveVariable(var);
 		//compare with what? TODO save last value
-		return null;
+		StringBuffer sb = new StringBuffer();
+		sb.append("<" + getTagName() + ">");
+		for(Node node : carries) {
+			sb.append(node.render(compiler));
+		}
+		sb.append("</" + getTagName() + ">");
+		return sb.toString();
 	}
 
 	@Override
@@ -26,6 +33,11 @@ public class IfchangeTag implements Tag{
 	@Override
 	public void initialize(String helpers) throws CompilerException {
 		var = helpers;
+	}
+
+	@Override
+	public String getTagName() {
+		return "ifchange";
 	}
 
 }

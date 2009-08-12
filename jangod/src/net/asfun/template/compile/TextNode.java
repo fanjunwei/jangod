@@ -4,7 +4,7 @@ import net.asfun.template.parse.FixedToken;
 import net.asfun.template.parse.Token;
 
 public class TextNode implements Node{
-	
+
 	public TextNode(Token tk) {
 		token = tk;
 	}

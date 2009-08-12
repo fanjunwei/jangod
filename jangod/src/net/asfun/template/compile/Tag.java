@@ -1,10 +1,7 @@
-package net.asfun.template.tag;
+package net.asfun.template.compile;
 
 import java.util.List;
 
-import net.asfun.template.compile.CompilerException;
-import net.asfun.template.compile.JangodCompiler;
-import net.asfun.template.compile.Node;
 
 public interface Tag {
 
@@ -19,4 +16,6 @@ public interface Tag {
 	 * @return
 	 */
 	public String getEndTagName();
+	
+	public String getTagName();
 }

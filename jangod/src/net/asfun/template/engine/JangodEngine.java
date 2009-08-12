@@ -1,8 +1,7 @@
 package net.asfun.template.engine;
 
 import java.io.Reader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Date;
 
 import javax.script.Bindings;
 import javax.script.ScriptContext;
@@ -15,27 +14,29 @@ import net.asfun.template.compile.CompilerException;
 import net.asfun.template.compile.JangodCompiler;
 import net.asfun.template.parse.JangodParser;
 import net.asfun.template.parse.ParserException;
+import net.asfun.template.util.JangodLogger;
 
 public class JangodEngine implements ScriptEngine {
 	
-	private static final Logger logger = Logger.getLogger("asfun.jandog");
 	private String defaultBindings = "javax.script.SimpleBindings";
 	private JangodEngineFactory factory;
 	private ScriptContext context = new JangodContext();
-	JangodCompiler compiler = new JangodCompiler();
 	
 	public JangodEngine() {
 		factory = new JangodEngineFactory();
-		//TODO use CacheBindings for global scope
-		//TODO set default var like now, version, etc.
 		context.setBindings(createBindings(), ScriptContext.GLOBAL_SCOPE);
+		initGlobalData();
 	}
 	
 	public JangodEngine(JangodEngineFactory fac) {
 		factory = fac;
-		//TODO use CacheBindings for global scope
-		//TODO set default var like now, version, etc.
 		context.setBindings(createBindings(), ScriptContext.GLOBAL_SCOPE);
+		initGlobalData();
+	}
+	
+	private void initGlobalData() {
+		context.setAttribute("now", new Date(), ScriptContext.GLOBAL_SCOPE);
+		//TODO set default var like now, version, etc.
 	}
 
 	@Override
@@ -43,13 +44,13 @@ public class JangodEngine implements ScriptEngine {
 		try {
 			return (Bindings) Class.forName(defaultBindings).newInstance();
 		} catch (InstantiationException e) {
-			logger.log(Level.SEVERE, e.getMessage(), e.getCause());
+			JangodLogger.severe(e.getMessage(), e.getCause());
 		} catch (IllegalAccessException e) {
-			logger.log(Level.SEVERE, e.getMessage(), e.getCause());
+			JangodLogger.severe(e.getMessage(), e.getCause());
 		} catch (ClassNotFoundException e) {
-			logger.log(Level.SEVERE, e.getMessage(), e.getCause());
+			JangodLogger.severe(e.getMessage(), e.getCause());
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, e.getMessage(), e.getCause());
+			JangodLogger.severe(e.getMessage(), e.getCause());
 		}
 		return new SimpleBindings();
 	}
@@ -57,10 +58,9 @@ public class JangodEngine implements ScriptEngine {
 	@Override
 	public Object eval(String script, ScriptContext ctx) throws ScriptException {
 		JangodParser parser = new JangodParser(script);
-		JangodCompiler tempCompiler = new JangodCompiler();
-		tempCompiler.setContext(ctx);
+		JangodCompiler compiler = new JangodCompiler(ctx);
 		try {
-			return tempCompiler.render(parser);
+			return compiler.render(parser);
 		} catch (CompilerException e) {
 			throw new ScriptException(e.getMessage());
 		}
@@ -74,10 +74,9 @@ public class JangodEngine implements ScriptEngine {
 		} catch (ParserException e) {
 			throw new ScriptException(e.getMessage());
 		}
-		JangodCompiler tempCompiler = new JangodCompiler();
-		tempCompiler.setContext(ctx);
+		JangodCompiler compiler = new JangodCompiler(ctx);
 		try {
-			return tempCompiler.render(parser);
+			return compiler.render(parser);
 		} catch (CompilerException e) {
 			throw new ScriptException(e.getMessage());
 		}
@@ -91,7 +90,7 @@ public class JangodEngine implements ScriptEngine {
 	@Override
 	public Object eval(String script) throws ScriptException {
 		JangodParser parser = new JangodParser(script);
-		compiler.setContext(context);
+		JangodCompiler compiler = new JangodCompiler(context);
 		try {
 			return compiler.render(parser);
 		} catch (CompilerException e) {
@@ -107,7 +106,7 @@ public class JangodEngine implements ScriptEngine {
 		} catch (ParserException e) {
 			throw new ScriptException(e.getMessage());
 		}
-		compiler.setContext(context);
+		JangodCompiler compiler = new JangodCompiler(context);
 		try {
 			return compiler.render(parser);
 		} catch (CompilerException e) {
@@ -118,13 +117,12 @@ public class JangodEngine implements ScriptEngine {
 	@Override
 	public Object eval(String script, Bindings n) throws ScriptException {
 		JangodParser parser = new JangodParser(script);
-		JangodCompiler tempCompiler = new JangodCompiler();
 		ScriptContext ctx = new JangodContext();
 		ctx.setBindings(context.getBindings(ScriptContext.GLOBAL_SCOPE), ScriptContext.GLOBAL_SCOPE);
 		ctx.setBindings(n, ScriptContext.ENGINE_SCOPE);
-		tempCompiler.setContext(ctx);
+		JangodCompiler compiler = new JangodCompiler(ctx);
 		try {
-			return tempCompiler.render(parser);
+			return compiler.render(parser);
 		} catch (CompilerException e) {
 			throw new ScriptException(e.getMessage());
 		}
@@ -138,13 +136,13 @@ public class JangodEngine implements ScriptEngine {
 		} catch (ParserException e) {
 			throw new ScriptException(e.getMessage());
 		}
-		JangodCompiler tempCompiler = new JangodCompiler();
+		
 		ScriptContext ctx = new JangodContext();
 		ctx.setBindings(context.getBindings(ScriptContext.GLOBAL_SCOPE), ScriptContext.GLOBAL_SCOPE);
 		ctx.setBindings(n, ScriptContext.ENGINE_SCOPE);
-		tempCompiler.setContext(ctx);
+		JangodCompiler compiler = new JangodCompiler(ctx);
 		try {
-			return tempCompiler.render(parser);
+			return compiler.render(parser);
 		} catch (CompilerException e) {
 			throw new ScriptException(e.getMessage());
 		}
