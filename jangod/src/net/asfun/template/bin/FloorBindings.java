@@ -65,4 +65,12 @@ public class FloorBindings {
             throw new IllegalArgumentException("key can not be empty");
         }
     }
+
+	public FloorBindings copy() {
+		FloorBindings fb = new FloorBindings();
+		for (Map.Entry<Integer, Map<String,Object>> entry : floor.entrySet()) {
+			fb.floor.put(entry.getKey(), entry.getValue());
+		}
+		return fb;
+	}
 }
