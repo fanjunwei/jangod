@@ -47,9 +47,6 @@ public class HelperStringTokenizer implements Iterator<String>, Iterable<String>
 	
 	private String makeToken() {
 		char c = helpers[currPost++];
-		if ( currPost == length ) {
-			return getEndToken();
-		}
 		if ( c =='"' | c == '\'' ) {
 			//reach the end of current token
 			if (startChar == c) {
@@ -73,6 +70,9 @@ public class HelperStringTokenizer implements Iterator<String>, Iterable<String>
 		else if ( startChar == -1) {
 			startChar = 32;// ' '
 			tokenStart = currPost - 1;
+		}
+		if ( currPost == length ) {
+			return getEndToken();
 		}
 		return null;
 	}

@@ -33,6 +33,8 @@ public class ScriptTest {
 			site.put("title", "web site title");
 			engine.put("page", page);
 			engine.put("site", site);
+			String[] relateposts = {"abc", "def", "gih"};
+			engine.put("relateposts", relateposts);
 			reader = new FileReader("D:/workspace/jvalog/war/themes/default/post.html");
 			Object obj = engine.eval(reader);
 			System.out.println(obj);

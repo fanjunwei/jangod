@@ -1,6 +1,5 @@
 package net.asfun.template.tag;
 
-import java.util.Iterator;
 import java.util.List;
 
 import net.asfun.template.compile.CompilerException;
@@ -11,7 +10,7 @@ import net.asfun.template.util.ObjectIterator;
 import net.asfun.template.compile.Node;
 
 /**
- * {% for a in b %}
+ * {% for a in b %}		{% for a in b reversed%}
  * @author fangchq
  *
  */
@@ -19,28 +18,30 @@ public class ForTag implements Tag {
 
 	private String item;
 	private String items;
+	private boolean isReverse = false;
 
 	@Override
 	public String compile(List<Node> carries, JangodCompiler compiler) throws CompilerException {
-//		Iterator<Object> it = ObjectIterator.toIterator(compiler.resolveVariable(items));
-//		if (it == null) {
+		List<Object> it = ObjectIterator.toList(compiler.resolveVariable(items), isReverse);
+//		if ( it.size() == 0 ) {
 //			return "";
 //		}
-//		StringBuffer buff = new StringBuffer();
-//		while ( it.hasNext() ) {
-//			compiler.setTempVar(item, it.next());
-//			for(Node node : carries) {
-//				buff.append(node.render(compiler));
-//			}
-//		}
-//		return buff.toString();
-		StringBuffer sb = new StringBuffer();
-		sb.append("<" + getTagName() + ">");
-		for(Node node : carries) {
-			sb.append(node.render(compiler));
+		ForLoop loop = (ForLoop) compiler.fetchRuntimeScope("loop");
+		if ( loop == null ) {
+			loop = new ForLoop(it.size());
+			compiler.assignRuntimeScope("loop", loop);
 		}
-		sb.append("</" + getTagName() + ">");
-		return sb.toString();
+		StringBuffer buff = new StringBuffer();
+		for(Object obj : it) {
+			//set item variable
+			compiler.assignRuntimeScope(item, obj);
+			for(Node node : carries) {
+				buff.append(node.render(compiler));
+			}
+			//change loop variable
+			loop.next();
+		}
+		return buff.toString();
 	}
 
 	/**
@@ -51,11 +52,16 @@ public class ForTag implements Tag {
 	@Override
 	public void initialize(String helpers) throws CompilerException {
 		String[] helper = new HelperStringTokenizer(helpers).allTokens();
-		if (helper.length != 3) {
-			throw new CompilerException("for tag expects three helpers:" + helpers);
+		switch(helper.length) {
+			case 4 :
+				isReverse = true;
+			case 3 :
+				item = helper[0];
+				items = helper[2];
+				break;
+			default :
+				throw new CompilerException("for tag expects 3 or 4 helpers:" + helpers);
 		}
-		item = helper[0];
-		items = helper[2];
 	}
 
 	@Override

@@ -6,20 +6,29 @@ import net.asfun.template.compile.CompilerException;
 import net.asfun.template.compile.JangodCompiler;
 import net.asfun.template.compile.Node;
 import net.asfun.template.compile.Tag;
+import net.asfun.template.parse.JangodParser;
+import net.asfun.template.parse.ParserException;
+import net.asfun.template.util.HelperStringTokenizer;
+import net.asfun.template.util.TemplateLoader;
 
 public class IncludeTag implements Tag{
 
+	private String templateFile;
+	
 	@Override
 	public String compile(List<Node> carries, JangodCompiler compiler)
 			throws CompilerException {
-		// TODO Auto-generated method stub
-		StringBuffer sb = new StringBuffer();
-		sb.append("<" + getTagName() + ">");
-		for(Node node : carries) {
-			sb.append(node.render(compiler));
+		try {
+			if ( ! TemplateLoader.isSetup() ) {
+				TemplateLoader.setBase(compiler.fetchGlobalScope("TPL_ROOT_DIR").toString());
+			}
+			JangodParser parser = new JangodParser(TemplateLoader.getReader(templateFile));
+			JangodCompiler child = compiler.copy();
+			child.assignRuntimeScope(JangodCompiler.INSERT_FLAG, true, 1);
+			return child.render(parser);
+		} catch (ParserException e) {
+			throw new CompilerException(e.getMessage());
 		}
-		sb.append("</" + getTagName() + ">");
-		return sb.toString();
 	}
 
 	@Override
@@ -34,8 +43,11 @@ public class IncludeTag implements Tag{
 
 	@Override
 	public void initialize(String helpers) throws CompilerException {
-		// TODO Auto-generated method stub
-		
+		String[] helper = new HelperStringTokenizer(helpers).allTokens();
+		if( helper.length != 1) {
+			throw new CompilerException("include tag expects 1 helper >>> " + helper.length);
+		}
+		templateFile = helper[0];
 	}
 
 }

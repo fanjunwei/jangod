@@ -69,7 +69,8 @@ public class FloorBindings {
 	public FloorBindings copy() {
 		FloorBindings fb = new FloorBindings();
 		for (Map.Entry<Integer, Map<String,Object>> entry : floor.entrySet()) {
-			fb.floor.put(entry.getKey(), entry.getValue());
+//			fb.floor.put(entry.getKey(), entry.getValue());
+			fb.putAll(entry.getValue(), entry.getKey());
 		}
 		return fb;
 	}

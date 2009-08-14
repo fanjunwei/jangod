@@ -33,6 +33,7 @@ public class JangodContext implements ScriptContext{
 
 	@Override
 	public Object getAttribute(String name, int scope) {
+		Bindings bn = getBindings(scope);//TODO
 		return getBindings(scope).get(name);
 	}
 

@@ -4,12 +4,22 @@ import java.util.List;
 
 import javax.script.ScriptContext;
 
+import org.apache.commons.collections.MapIterator;
+import org.apache.commons.collections.map.ListOrderedMap;
+
 import net.asfun.template.bin.FloorBindings;
 import net.asfun.template.parse.JangodParser;
 import net.asfun.template.util.JangodLogger;
 import net.asfun.template.util.Variable;
 
 public class JangodCompiler {
+	
+	public static final String CHILD_FLAG = "'IS\"CHILD";
+	public static final String PARENT_FLAG = "'IS\"PARENT";
+	public static final String INSERT_FLAG = "'IS\"INSERT";
+	public static final String SEMI_RENDER = "'SEMI\"FORMAL";
+	public static final String BLOCK_LIST = "'BLK\"LIST";
+	public static final String SEMI_BLOCK = "<K2C9OL7B>";
 	
 	private int level = 1;
 	private FloorBindings runtime;
@@ -40,11 +50,23 @@ public class JangodCompiler {
 		for(Node node : nodes) {
 			buff.append(node.render(this));
 		}
-		if ( runtime.get("'IS\"CHILD", 1) != null ) {
+		if ( runtime.get(CHILD_FLAG, 1) != null && 
+				runtime.get(INSERT_FLAG, 1) == null) {
 			JangodLogger.finest(buff.toString());
-			String semi = context.getAttribute("'SEMI\"FORMAL").toString();
-			//使用 engine scope的block 内容，代替标识符
-			return semi;
+			StringBuilder sb = new StringBuilder(context.getAttribute(SEMI_RENDER).toString());
+			//replace the block identify with block content
+			ListOrderedMap blockList = (ListOrderedMap) fetchEngineScope(BLOCK_LIST);
+			MapIterator mi = blockList.mapIterator();
+			int index;
+			String replace;
+			while( mi.hasNext() ) {
+				mi.next();
+				replace = SEMI_BLOCK + mi.getKey();
+				index = sb.indexOf(replace);
+				sb.delete(index, index + replace.length());
+				sb.insert(index, mi.getValue());
+			}
+			return sb.toString();
 		}
 		return buff.toString();
 	}
@@ -63,15 +85,6 @@ public class JangodCompiler {
 			JangodLogger.info("Can't resolve variable >>> " + varName);
 		}
 		return obj;
-	}
-
-	/**
-	 * save variable to context engine scope
-	 * @param name
-	 * @param item
-	 */
-	public void setVariable(String name, Object item) {
-		context.setAttribute(name, item, ScriptContext.ENGINE_SCOPE);
 	}
 	
 	/**

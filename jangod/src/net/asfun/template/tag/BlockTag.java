@@ -1,6 +1,9 @@
 package net.asfun.template.tag;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.collections.map.ListOrderedMap;
 
 import net.asfun.template.compile.CompilerException;
 import net.asfun.template.compile.JangodCompiler;
@@ -8,36 +11,51 @@ import net.asfun.template.compile.Node;
 import net.asfun.template.compile.Tag;
 
 public class BlockTag implements Tag{
+	
+	private static final String BLOCKNAMES = "'BLK\"NAMES";
+	private String blockName;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public String compile(List<Node> carries, JangodCompiler compiler)
 			throws CompilerException {
-		compiler.setLevel(1);
-		Object isChild = compiler.fetchRuntimeScope("'IS\"CHILD", 1);
+		//check block name is unique
+		List<String> blockNames = (List<String>) compiler.fetchRuntimeScope(BLOCKNAMES ,1);
+		if ( blockNames == null ) {
+			blockNames = new ArrayList<String>();
+		}
+		if ( blockNames.contains(blockName) ) {
+			throw new CompilerException("Can't redefine the block with name >>> " + blockName);
+		} else {
+			blockNames.add(blockName);
+			compiler.assignRuntimeScope(BLOCKNAMES, blockNames, 1);
+		}
+		Object isChild = compiler.fetchRuntimeScope(JangodCompiler.CHILD_FLAG, 1);
 		if ( isChild != null ) {
-			//替换engine scope 里面的对应的block内容
-			StringBuffer sb = new StringBuffer();
-			for(Node node : carries) {
-				sb.append(node.render(compiler));
+			ListOrderedMap blockList = (ListOrderedMap) compiler.fetchEngineScope(JangodCompiler.BLOCK_LIST);
+			//check block was defined in parent
+			if ( ! blockList.containsKey(blockName) ) {
+				throw new CompilerException("Dosen't define block in extends parent with name >>> " + blockName);
 			}
-			compiler.setVariable("唯一标识", sb.toString());
+			//cover parent block content with child's.
+			blockList.put(blockName, getBlockContent(carries, compiler));
+			return "";
 		}
-		Object isParent = compiler.fetchRuntimeScope("'IS\"PARENT", 1);
+		Object isParent = compiler.fetchRuntimeScope(JangodCompiler.PARENT_FLAG, 1);
 		if ( isParent != null) {
-			//TODO BLOCK
-			//保持block内容到engine scope ，返回唯一标识为结果
-			StringBuffer sb = new StringBuffer();
-			for(Node node : carries) {
-				sb.append(node.render(compiler));
-			}
-			compiler.setVariable("唯一标识", sb.toString());
+			//save block content to engine, and return identify
+			ListOrderedMap blockList = (ListOrderedMap) compiler.fetchEngineScope(JangodCompiler.BLOCK_LIST);
+			blockList.put(blockName, getBlockContent(carries, compiler));
+			return JangodCompiler.SEMI_BLOCK + blockName;
 		}
+		return getBlockContent(carries, compiler);
+	}
+	
+	private String getBlockContent(List<Node> carries, JangodCompiler compiler) throws CompilerException {
 		StringBuffer sb = new StringBuffer();
-		sb.append("<" + getTagName() + ">");
 		for(Node node : carries) {
 			sb.append(node.render(compiler));
 		}
-		sb.append("</" + getTagName() + ">");
 		return sb.toString();
 	}
 
@@ -53,8 +71,10 @@ public class BlockTag implements Tag{
 
 	@Override
 	public void initialize(String helpers) throws CompilerException {
-		// TODO Auto-generated method stub
-		
+		if ( blockName == null ) {
+			throw new CompilerException("block tag expects 1 helper >>> 0");
+		}
+		blockName = helpers;
 	}
 
 }

@@ -3,7 +3,7 @@ package net.asfun.template.compile;
 import java.util.List;
 
 
-public interface Tag {
+public interface Tag extends Cloneable{
 
 	public String compile(List<Node> carries, JangodCompiler compiler) throws CompilerException;
 
