@@ -13,7 +13,7 @@ public class InstructionLibrary extends SimpleLibrary<Instruction>{
 	@Override
 	protected void initialize() {
 		Instruction set = new SetInst();
-		lib.register(set.getInstName(), set);
+		register(set.getInstName(), set);
 	}
 	
 	public static Instruction getInstruction(String name) throws CompilerException {
