@@ -82,7 +82,7 @@ public class JangodCompiler {
 		if ( obj != null ) {
 			obj = var.resolve(obj);
 		} else {
-			JangodLogger.info("Can't resolve variable >>> " + varName);
+			JangodLogger.fine("Can't resolve variable >>> " + varName);
 		}
 		return obj;
 	}

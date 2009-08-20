@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.asfun.template.parse.EchoToken;
+import net.asfun.template.parse.InstToken;
 import net.asfun.template.parse.JangodParser;
 import net.asfun.template.parse.TagToken;
 import net.asfun.template.parse.Token;
@@ -31,7 +32,12 @@ public class NodeList {
 					nodes.add(xn);
 					break;
 				case Token.TOKEN_INST :
-					//TODO not right now
+					try {
+						InstNode in = new InstNode((InstToken) token, level);
+						nodes.add(in);
+					} catch (CompilerException e) {
+						JangodLogger.warning("Can't create node with token >>> " + token,e.getCause());
+					}	
 					break;
 				case Token.TOKEN_ECHO :
 					VariableNode vn = new VariableNode((EchoToken) token, level);

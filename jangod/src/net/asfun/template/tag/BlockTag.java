@@ -13,12 +13,16 @@ import net.asfun.template.compile.Tag;
 public class BlockTag implements Tag{
 	
 	private static final String BLOCKNAMES = "'BLK\"NAMES";
-	private String blockName;
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String compile(List<Node> carries, JangodCompiler compiler)
+	public String compile(List<Node> carries, String helpers, JangodCompiler compiler)
 			throws CompilerException {
+		//init
+		if ( helpers == null ) {
+			throw new CompilerException("block tag expects 1 helper >>> 0");
+		}
+		String blockName = helpers;
 		//check block name is unique
 		List<String> blockNames = (List<String>) compiler.fetchRuntimeScope(BLOCKNAMES ,1);
 		if ( blockNames == null ) {
@@ -67,14 +71,6 @@ public class BlockTag implements Tag{
 	@Override
 	public String getTagName() {
 		return "block";
-	}
-
-	@Override
-	public void initialize(String helpers) throws CompilerException {
-		if ( helpers == null ) {
-			throw new CompilerException("block tag expects 1 helper >>> 0");
-		}
-		blockName = helpers;
 	}
 
 }

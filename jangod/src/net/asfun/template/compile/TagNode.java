@@ -17,7 +17,7 @@ public class TagNode implements Node{
 	public TagNode(TagToken token, JangodParser parser, int lvl) throws CompilerException {
 		master = token;
 		level = lvl;
-		tag = TagLibrary.getTag(master.getTagName(), master.getHelpers());
+		tag = TagLibrary.getTag(master.getTagName());
 		endTagName = tag.getEndTagName();
 		if ( endTagName != null ) {
 			carries = NodeList.makeList(parser, endTagName, level + 1);
@@ -28,10 +28,8 @@ public class TagNode implements Node{
 
 	@Override
 	public String render(JangodCompiler compiler) throws CompilerException {
-//		if ( endTagName != null ) {
-			compiler.setLevel(level);
-//		}
-		return tag.compile(carries, compiler);
+		compiler.setLevel(level);
+		return tag.compile(carries, master.getHelpers(), compiler);
 	}
 	
 	public String toString() {

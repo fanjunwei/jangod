@@ -9,11 +9,11 @@ import net.asfun.template.compile.Tag;
 
 public class IfchangeTag implements Tag{
 	
-	private String var;
 
 	@Override
-	public String compile(List<Node> carries, JangodCompiler compiler)
+	public String compile(List<Node> carries, String helpers, JangodCompiler compiler)
 			throws CompilerException {
+		String var = helpers;
 		Object test = compiler.resolveVariable(var);
 		//compare with what? TODO save last value
 		StringBuffer sb = new StringBuffer();
@@ -28,11 +28,6 @@ public class IfchangeTag implements Tag{
 	@Override
 	public String getEndTagName() {
 		return "endif";
-	}
-
-	@Override
-	public void initialize(String helpers) throws CompilerException {
-		var = helpers;
 	}
 
 	@Override

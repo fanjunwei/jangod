@@ -1,7 +1,6 @@
 package net.asfun.template.engine;
 
 import java.io.Reader;
-import java.util.Date;
 
 import javax.script.Bindings;
 import javax.script.ScriptContext;
@@ -35,8 +34,7 @@ public class JangodEngine implements ScriptEngine {
 	}
 	
 	private void initGlobalData() {
-		context.setAttribute("now", new Date(), ScriptContext.GLOBAL_SCOPE);
-		//TODO set default var like now, version, etc.
+		//TODO set default var like version, etc.
 	}
 
 	@Override

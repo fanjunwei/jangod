@@ -12,12 +12,15 @@ import net.asfun.template.util.HelperStringTokenizer;
 import net.asfun.template.util.TemplateLoader;
 
 public class IncludeTag implements Tag{
-
-	private String templateFile;
 	
 	@Override
-	public String compile(List<Node> carries, JangodCompiler compiler)
+	public String compile(List<Node> carries, String helpers, JangodCompiler compiler)
 			throws CompilerException {
+		String[] helper = new HelperStringTokenizer(helpers).allTokens();
+		if( helper.length != 1) {
+			throw new CompilerException("include tag expects 1 helper >>> " + helper.length);
+		}
+		String templateFile = helper[0];
 		try {
 			if ( ! TemplateLoader.isSetup() ) {
 				TemplateLoader.setBase(compiler.fetchGlobalScope("TPL_ROOT_DIR").toString());
@@ -39,15 +42,6 @@ public class IncludeTag implements Tag{
 	@Override
 	public String getTagName() {
 		return "include";
-	}
-
-	@Override
-	public void initialize(String helpers) throws CompilerException {
-		String[] helper = new HelperStringTokenizer(helpers).allTokens();
-		if( helper.length != 1) {
-			throw new CompilerException("include tag expects 1 helper >>> " + helper.length);
-		}
-		templateFile = helper[0];
 	}
 
 }

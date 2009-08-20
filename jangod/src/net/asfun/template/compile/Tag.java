@@ -3,11 +3,9 @@ package net.asfun.template.compile;
 import java.util.List;
 
 
-public interface Tag extends Cloneable{
+public interface Tag {
 
-	public String compile(List<Node> carries, JangodCompiler compiler) throws CompilerException;
-
-	public void initialize(String helpers) throws CompilerException;
+	public String compile(List<Node> carries, String helpers, JangodCompiler compiler) throws CompilerException;
 
 	/**
 	 * Get name of end tag

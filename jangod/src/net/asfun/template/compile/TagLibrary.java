@@ -1,7 +1,6 @@
 package net.asfun.template.compile;
 
 import net.asfun.template.tag.*;
-import net.asfun.template.util.JangodLogger;
 
 public class TagLibrary extends SimpleLibrary<Tag>{
 	
@@ -31,17 +30,7 @@ public class TagLibrary extends SimpleLibrary<Tag>{
 		register(elseTag.getTagName(), elseTag);
 	}
 
-	public static Tag getTag(String tagName, String helpers) throws CompilerException {
-		try {
-			Tag tag = lib.fetch(tagName).getClass().newInstance();
-			tag.initialize(helpers);
-			return tag;
-		} catch (InstantiationException e) {
-			JangodLogger.severe("Can't create handler tag >>> " + tagName);
-			throw new CompilerException(e.getMessage());
-		} catch (IllegalAccessException e) {
-			JangodLogger.severe("Can't create handler tag >>> " + tagName);
-			throw new CompilerException(e.getMessage());
-		}
+	public static Tag getTag(String tagName) throws CompilerException {
+		return lib.fetch(tagName);
 	}
 }

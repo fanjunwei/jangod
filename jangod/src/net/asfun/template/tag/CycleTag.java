@@ -15,39 +15,12 @@ import net.asfun.template.util.HelperStringTokenizer;
  */
 public class CycleTag implements Tag{
 	
-	/**
-	 * {% cycle a,b,c %}  type=0;
-	 * {% cycle a,b,c as d %}  type=1;
-	 * {% cycle d %}  type=2;
-	 */
-	private int type = 0;
-	private String[] values;
-	private String var;
 
 	@Override
-	public String compile(List<Node> carries, JangodCompiler compiler)
+	public String compile(List<Node> carries, String helpers, JangodCompiler compiler)
 			throws CompilerException {
-		if ( type == 2) {
-			values = (String[]) compiler.fetchRuntimeScope(var);
-			type = 0;
-		}
-		if ( type == 0 ) {
-			int forindex = (Integer) compiler.resolveVariable("loop.index");
-			return values[forindex % values.length];
-		}
-		else {
-			compiler.assignRuntimeScope(var, values);
-			return "";
-		}
-	}
-
-	@Override
-	public String getEndTagName() {
-		return null;
-	}
-
-	@Override
-	public void initialize(String helpers) throws CompilerException {
+		String[] values;
+		String var = null;
 		HelperStringTokenizer tk = new HelperStringTokenizer(helpers);
 		//TODO 兼容 逗号和空格的分隔形式
 		String[] helper = tk.allTokens();
@@ -56,20 +29,26 @@ public class CycleTag implements Tag{
 			items.splitComma(true);
 			values = items.allTokens();
 			if (values.length == 1) {
-				type = 2;
 				var = values[0];
-			} else {
-				type = 0;
+				values = (String[]) compiler.fetchRuntimeScope(var);
 			}
-		}
-		if (helper.length == 3) {
+			int forindex = (Integer) compiler.resolveVariable("loop.index");
+			return values[forindex % values.length];
+		} else if (helper.length == 3) {
 			HelperStringTokenizer items = new HelperStringTokenizer(helper[0]);
 			items.splitComma(true);
 			values = items.allTokens();
 			var = helper[2];
-			type = 1;
+			compiler.assignRuntimeScope(var, values);
+			return "";
+		} else {
+			throw new CompilerException("cycle tag expects 1 or 3 helper(s) >>> " + helper.length);
 		}
-		throw new CompilerException("cycle tag expects 1 or 3 helper(s) >>> " + helper.length);
+	}
+
+	@Override
+	public String getEndTagName() {
+		return null;
 	}
 
 	@Override

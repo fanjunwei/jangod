@@ -10,7 +10,7 @@ import net.asfun.template.compile.Tag;
 public class ElseTag implements Tag{
 
 	@Override
-	public String compile(List<Node> carries, JangodCompiler compiler)
+	public String compile(List<Node> carries, String helpers, JangodCompiler compiler)
 			throws CompilerException {
 		return "";
 	}
@@ -23,11 +23,6 @@ public class ElseTag implements Tag{
 	@Override
 	public String getTagName() {
 		return "else";
-	}
-
-	@Override
-	public void initialize(String helpers) throws CompilerException {
-		//nothing
 	}
 
 }

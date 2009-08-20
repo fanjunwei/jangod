@@ -15,13 +15,23 @@ import net.asfun.template.compile.Node;
  *
  */
 public class ForTag implements Tag {
-
-	private String item;
-	private String items;
-	private boolean isReverse = false;
+	
 
 	@Override
-	public String compile(List<Node> carries, JangodCompiler compiler) throws CompilerException {
+	public String compile(List<Node> carries, String helpers, JangodCompiler compiler) throws CompilerException {
+		String[] helper = new HelperStringTokenizer(helpers).allTokens();
+		String item, items;
+		boolean isReverse = false;
+		switch(helper.length) {
+			case 4 :
+				isReverse = true;
+			case 3 :
+				item = helper[0];
+				items = helper[2];
+				break;
+			default :
+				throw new CompilerException("for tag expects 3 or 4 helpers:" + helpers);
+		}
 		List<Object> it = ObjectIterator.toList(compiler.resolveVariable(items), isReverse);
 //		if ( it.size() == 0 ) {
 //			return "";
@@ -43,26 +53,6 @@ public class ForTag implements Tag {
 			loop.next();
 		}
 		return buff.toString();
-	}
-
-	/**
-	 * @param helpers 
-	 * 		like  for [ cat in cats ]
-	 * @throws CompilerException 
-	 */
-	@Override
-	public void initialize(String helpers) throws CompilerException {
-		String[] helper = new HelperStringTokenizer(helpers).allTokens();
-		switch(helper.length) {
-			case 4 :
-				isReverse = true;
-			case 3 :
-				item = helper[0];
-				items = helper[2];
-				break;
-			default :
-				throw new CompilerException("for tag expects 3 or 4 helpers:" + helpers);
-		}
 	}
 
 	@Override

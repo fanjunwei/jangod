@@ -18,12 +18,13 @@ import net.asfun.template.util.ObjectTruthValue;
  *
  */
 public class IfTag implements Tag {
-	
-	private String var;
+
 
 	@Override
-	public String compile(List<Node> carries, JangodCompiler compiler)
+	public String compile(List<Node> carries, String helpers, JangodCompiler compiler)
 			throws CompilerException {
+		//TODO test more helpers
+		String var = helpers;
 		Object test = compiler.resolveVariable(var);
 		StringBuffer sb = new StringBuffer();
 		if ( ObjectTruthValue.evaluate(test) ) {
@@ -50,13 +51,6 @@ public class IfTag implements Tag {
 	@Override
 	public String getEndTagName() {
 		return "endif";
-	}
-
-	@Override
-	public void initialize(String helpers) throws CompilerException {
-//		String[] helper = new HelperStringTokenizer(helpers).allTokens();
-		//TODO test more helpers
-		var = helpers;
 	}
 
 	@Override

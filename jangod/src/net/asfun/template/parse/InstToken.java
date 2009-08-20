@@ -6,6 +6,9 @@ package net.asfun.template.parse;
  *
  */
 public class InstToken extends Token {
+	
+	private String instName;
+	private String helpers;
 
 	public InstToken(String image) throws ParserException{
 		super(image);
@@ -19,12 +22,30 @@ public class InstToken extends Token {
 	@Override
 	protected void parse() throws ParserException{
 		content = image.substring(2, image.length()-2).trim();
-		// TODO Auto-generated method stub
-		
+		int postBlank = content.indexOf(' ');
+		if ( postBlank > 0 ) {
+			instName = content.substring(0, postBlank);
+			helpers = content.substring(postBlank).trim();
+		}
+		else {
+			instName = content;
+			helpers = "";
+		}	
+	}
+
+	public String getInstName() {
+		return instName;
+	}
+	
+	public String getHelpers() {
+		return helpers;
 	}
 	
 	public String toString() {
-		return "[INS]\r\n" + content;
+		if ( helpers.length() == 0) {
+			return "[INST]\r\n" + instName;
+		}
+		return "[INST]\r\n" + instName + "\r\n\t" + helpers;
 	}
 
 }
