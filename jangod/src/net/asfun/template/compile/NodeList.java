@@ -34,7 +34,7 @@ public class NodeList {
 					//TODO not right now
 					break;
 				case Token.TOKEN_ECHO :
-					VariableNode vn = new VariableNode((EchoToken) token);
+					VariableNode vn = new VariableNode((EchoToken) token, level);
 					nodes.add(vn);
 					break;
 				case Token.TOKEN_TAG :
@@ -46,7 +46,7 @@ public class NodeList {
 						TagNode tn = new TagNode((TagToken) token, parser, level);
 						nodes.add(tn);
 					} catch (CompilerException e) {
-						JangodLogger.warning("Can't create node with token >>> " + token);
+						JangodLogger.warning("Can't create node with token >>> " + token,e.getCause());
 					}
 					break;
 				default :

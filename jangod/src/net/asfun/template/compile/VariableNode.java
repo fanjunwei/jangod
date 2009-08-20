@@ -8,14 +8,17 @@ import net.asfun.template.util.ObjectValue;
 
 public class VariableNode implements Node{
 	
-	public VariableNode(EchoToken tk) {
+	public VariableNode(EchoToken tk, int lvl) {
 		token = tk;
+		level = lvl;
 	}
 
+	private int level;
 	private EchoToken token;
 
 	@Override
 	public String render(JangodCompiler compiler) throws CompilerException {
+		compiler.setLevel(level);
 		Object var = compiler.resolveVariable(token.getVariable());
 		//filters
 		List<String> filters = token.getFilters();

@@ -6,7 +6,8 @@ import net.asfun.template.compile.CompilerException;
 import net.asfun.template.compile.JangodCompiler;
 import net.asfun.template.compile.Node;
 import net.asfun.template.compile.Tag;
-import net.asfun.template.util.HelperStringTokenizer;
+//import net.asfun.template.util.HelperStringTokenizer;
+import net.asfun.template.util.ObjectTruthValue;
 
 /**
  * {% if a %}
@@ -17,17 +18,32 @@ import net.asfun.template.util.HelperStringTokenizer;
  *
  */
 public class IfTag implements Tag {
+	
+	private String var;
 
 	@Override
 	public String compile(List<Node> carries, JangodCompiler compiler)
 			throws CompilerException {
-		// TODO Auto-generated method stub
+		Object test = compiler.resolveVariable(var);
 		StringBuffer sb = new StringBuffer();
-		sb.append("<" + getTagName() + ">");
-		for(Node node : carries) {
-			sb.append(node.render(compiler));
+		if ( ObjectTruthValue.evaluate(test) ) {
+			for(Node node : carries) {
+				if ( "[TagNode:else]".equals(node.toString()) ) {
+					break;
+				}
+				sb.append(node.render(compiler));
+			}
+		} else {
+			boolean inElse = false;
+			for(Node node : carries) {
+				if (inElse) {
+					sb.append(node.render(compiler));
+				}
+				if ( "[TagNode:else]".equals(node.toString()) ) {
+					inElse = true;
+				}
+			}
 		}
-		sb.append("</" + getTagName() + ">");
 		return sb.toString();
 	}
 
@@ -38,8 +54,9 @@ public class IfTag implements Tag {
 
 	@Override
 	public void initialize(String helpers) throws CompilerException {
-		String[] helper = new HelperStringTokenizer(helpers).allTokens();
-		//TODO 
+//		String[] helper = new HelperStringTokenizer(helpers).allTokens();
+		//TODO test more helpers
+		var = helpers;
 	}
 
 	@Override

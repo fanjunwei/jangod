@@ -26,15 +26,16 @@ public class ForTag implements Tag {
 //		if ( it.size() == 0 ) {
 //			return "";
 //		}
-		ForLoop loop = (ForLoop) compiler.fetchRuntimeScope("loop");
+		int level = compiler.getLevel() + 1;
+		ForLoop loop = (ForLoop) compiler.fetchRuntimeScope("loop", level);
 		if ( loop == null ) {
 			loop = new ForLoop(it.size());
-			compiler.assignRuntimeScope("loop", loop);
+			compiler.assignRuntimeScope("loop", loop, level);
 		}
 		StringBuffer buff = new StringBuffer();
 		for(Object obj : it) {
 			//set item variable
-			compiler.assignRuntimeScope(item, obj);
+			compiler.assignRuntimeScope(item, obj, level);
 			for(Node node : carries) {
 				buff.append(node.render(compiler));
 			}

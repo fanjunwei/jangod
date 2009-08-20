@@ -52,7 +52,6 @@ public class JangodCompiler {
 		}
 		if ( runtime.get(CHILD_FLAG, 1) != null && 
 				runtime.get(INSERT_FLAG, 1) == null) {
-			JangodLogger.finest(buff.toString());
 			StringBuilder sb = new StringBuilder(context.getAttribute(SEMI_RENDER).toString());
 			//replace the block identify with block content
 			ListOrderedMap blockList = (ListOrderedMap) fetchEngineScope(BLOCK_LIST);
@@ -62,9 +61,10 @@ public class JangodCompiler {
 			while( mi.hasNext() ) {
 				mi.next();
 				replace = SEMI_BLOCK + mi.getKey();
-				index = sb.indexOf(replace);
-				sb.delete(index, index + replace.length());
-				sb.insert(index, mi.getValue());
+				while ( (index = sb.indexOf(replace)) > 0 ) {
+					sb.delete(index, index + replace.length());
+					sb.insert(index, mi.getValue());
+				}
 			}
 			return sb.toString();
 		}
@@ -110,6 +110,10 @@ public class JangodCompiler {
 
 	public void setLevel(int lvl) {
 		level = lvl;
+	}
+	
+	public int getLevel() {
+		return level;
 	}
 
 	public Object fetchGlobalScope(String name) {

@@ -12,14 +12,7 @@ public class ElseTag implements Tag{
 	@Override
 	public String compile(List<Node> carries, JangodCompiler compiler)
 			throws CompilerException {
-		//TODO 
-		StringBuffer sb = new StringBuffer();
-		sb.append("<" + getTagName() + ">");
-		for(Node node : carries) {
-			sb.append(node.render(compiler));
-		}
-		sb.append("</" + getTagName() + ">");
-		return sb.toString();
+		return "";
 	}
 
 	@Override
@@ -34,8 +27,7 @@ public class ElseTag implements Tag{
 
 	@Override
 	public void initialize(String helpers) throws CompilerException {
-		// TODO Auto-generated method stub
-		
+		//nothing
 	}
 
 }

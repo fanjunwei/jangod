@@ -71,7 +71,7 @@ public class BlockTag implements Tag{
 
 	@Override
 	public void initialize(String helpers) throws CompilerException {
-		if ( blockName == null ) {
+		if ( helpers == null ) {
 			throw new CompilerException("block tag expects 1 helper >>> 0");
 		}
 		blockName = helpers;

@@ -28,9 +28,13 @@ public class TagNode implements Node{
 
 	@Override
 	public String render(JangodCompiler compiler) throws CompilerException {
-		if ( endTagName != null ) {
+//		if ( endTagName != null ) {
 			compiler.setLevel(level);
-		}
+//		}
 		return tag.compile(carries, compiler);
+	}
+	
+	public String toString() {
+		return "[TagNode:" + tag.getTagName() + "]";
 	}
 }
