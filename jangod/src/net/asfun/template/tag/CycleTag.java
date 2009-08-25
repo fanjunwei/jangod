@@ -52,7 +52,7 @@ public class CycleTag implements Tag{
 	}
 
 	@Override
-	public String getTagName() {
+	public String getName() {
 		return "cycle";
 	}
 

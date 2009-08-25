@@ -16,7 +16,8 @@ public class InstNode implements Node {
 
 	@Override
 	public String render(JangodCompiler compiler) throws CompilerException {
-		inst.act(level, token.getHelpers(), compiler);
+		compiler.setLevel(level);
+		inst.act(token.getHelpers(), compiler);
 		return "";
 	}
 

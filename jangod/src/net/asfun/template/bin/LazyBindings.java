@@ -3,6 +3,7 @@ package net.asfun.template.bin;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,21 +17,24 @@ public class LazyBindings implements Bindings{
 	private Map<String, Object> bins;
 	private Set<String> keys;
 	private Map<String, String> lazies;
+	private Map<String, Method> methods;
 	
 	public LazyBindings() {
 		bins = new HashMap<String, Object>();
+		keys = new HashSet<String>();
+		lazies = new HashMap<String, String>();
+		methods = new HashMap<String, Method>();
 	}
 	
 	/**
 	 * set up lazy load bindings
 	 * @param props
-	 *       like  posts => net.asfun.jvalog.domain.Post.getPosts
+	 *       like  recentPosts => net.asfun.jvalog.misc.AutoLoader.getPosts
 	 * @throws ScriptException
 	 */
-	public void config(Map<String, String> props) throws ScriptException {
-		//TODO check the settings all right
+	public void config(Map<String, String> props) {
 		lazies = props;
-		keys = props.keySet();
+		keys.addAll(props.keySet());
 		bins.clear();
 	}
 
@@ -56,10 +60,14 @@ public class LazyBindings implements Bindings{
 	@SuppressWarnings("unchecked")
 	private Object getFromDataSource(Object key) {
 		try {
-			Class c = Class.forName("");
-			Method method = c.getDeclaredMethod("", new Class[]{});
-			Object value = method.invoke(null, new Object[]{});
-			return value;
+			String lazy = lazies.get(key);
+			if ( ! methods.containsKey(lazy) ) {
+				int sep = lazy.lastIndexOf('.');
+				Class c = Class.forName(lazy.substring(0, sep));
+				Method method = c.getDeclaredMethod(lazy.substring(sep+1), new Class[]{});
+				methods.put(lazy, method);
+			}
+			return methods.get(lazy).invoke(null, new Object[]{});
 		} catch (Exception e) {
 			JangodLogger.severe(e.getMessage(), e.getCause());
 		} 

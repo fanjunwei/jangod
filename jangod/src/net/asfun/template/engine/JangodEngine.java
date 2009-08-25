@@ -19,17 +19,17 @@ public class JangodEngine implements ScriptEngine {
 	
 	private String defaultBindings = "javax.script.SimpleBindings";
 	private JangodEngineFactory factory;
-	private ScriptContext context = new JangodContext();
+	private ScriptContext context;
 	
 	public JangodEngine() {
 		factory = new JangodEngineFactory();
-		context.setBindings(createBindings(), ScriptContext.GLOBAL_SCOPE);
+		context = new JangodContext(factory.globalBindings);
 		initGlobalData();
 	}
 	
 	public JangodEngine(JangodEngineFactory fac) {
 		factory = fac;
-		context.setBindings(createBindings(), ScriptContext.GLOBAL_SCOPE);
+		context = new JangodContext(factory.globalBindings);
 		initGlobalData();
 	}
 	
@@ -115,8 +115,7 @@ public class JangodEngine implements ScriptEngine {
 	@Override
 	public Object eval(String script, Bindings n) throws ScriptException {
 		JangodParser parser = new JangodParser(script);
-		ScriptContext ctx = new JangodContext();
-		ctx.setBindings(context.getBindings(ScriptContext.GLOBAL_SCOPE), ScriptContext.GLOBAL_SCOPE);
+		ScriptContext ctx = new JangodContext(factory.globalBindings);
 		ctx.setBindings(n, ScriptContext.ENGINE_SCOPE);
 		JangodCompiler compiler = new JangodCompiler(ctx);
 		try {
@@ -135,8 +134,7 @@ public class JangodEngine implements ScriptEngine {
 			throw new ScriptException(e.getMessage());
 		}
 		
-		ScriptContext ctx = new JangodContext();
-		ctx.setBindings(context.getBindings(ScriptContext.GLOBAL_SCOPE), ScriptContext.GLOBAL_SCOPE);
+		ScriptContext ctx = new JangodContext(factory.globalBindings);
 		ctx.setBindings(n, ScriptContext.ENGINE_SCOPE);
 		JangodCompiler compiler = new JangodCompiler(ctx);
 		try {

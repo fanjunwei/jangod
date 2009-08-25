@@ -33,7 +33,7 @@ public class VariableNode implements Node{
 			try {
 				filter = FilterLibrary.getFilter(filters.get(i));
 			} catch (CompilerException ce) {
-				JangodLogger.warning("Using an unregistered filter >>> " + filters.get(i));
+				JangodLogger.warning("Skipping an unregistered filter >>> " + filters.get(i));
 				continue;
 			}
 			args = argss.get(i);

@@ -11,13 +11,13 @@ public class SetInst implements Instruction{
 
 
 	@Override
-	public String getInstName() {
+	public String getName() {
 		return "set";
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void act(int level, String helpers, JangodCompiler compiler) throws CompilerException {
+	public void act(String helpers, JangodCompiler compiler) throws CompilerException {
 		String[] helper = new HelperStringTokenizer(helpers).allTokens();
 		if ( helper.length != 4 ) {
 			throw new CompilerException("set inst expects 4 helper >>> " + helper.length);
@@ -26,18 +26,29 @@ public class SetInst implements Instruction{
 			left = helper[1],
 			operate = helper[2],
 			right = helper[3];
-		compiler.setLevel(level);
 		Object eleft = getValue(compiler, left);
-		Object eright = getValue(compiler, right);
+		Object eright;
 		if ( "==".equals(operate) ) {
+			eright = getValue(compiler, right);
+			//TODO make sure it's resolved first of old variables
 			compiler.assignEngineScope(var, eleft.equals(eright));
 		}
 		if ( "!=".equals(operate) ) {
+			eright = getValue(compiler, right);
 			compiler.assignEngineScope(var, ! eleft.equals(eright));
 		}
 		if ( "@".equals(operate) ) {
-			Collection er = (Collection)eright;
-			compiler.assignEngineScope(var, er.contains(eleft));
+			eright = compiler.resolveVariable(right);
+			if ( eright == null ) {
+				compiler.assignEngineScope(var, false);
+			} else {
+				if ( eright instanceof Collection ) {
+					Collection er = (Collection)eright;
+					compiler.assignEngineScope(var, er.contains(eleft));
+				} else if ( eright instanceof String ) {
+					compiler.assignEngineScope(var, eright.toString().contains(eleft.toString()));
+				}
+			}
 		}
 	}
 	

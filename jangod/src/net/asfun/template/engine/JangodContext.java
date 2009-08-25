@@ -16,14 +16,17 @@ public class JangodContext implements ScriptContext{
 	private Writer wtr;
 	private Reader rd;
 	
-	private static ThreadLocal<Bindings> engineScope = new ThreadLocal<Bindings>();
-	private Bindings globalScope = new SimpleBindings();
+	private Bindings engineScope = new SimpleBindings();
+	private Bindings globalScope;
+	
+	public JangodContext(Bindings global) {
+		globalScope = global;
+	}
 	
 	@Override
 	public Object getAttribute(String name) {
-		Bindings bindings = engineScope.get();
-		if ( bindings != null && bindings.containsKey(name)) {
-			return bindings.get(name);
+		if ( engineScope.containsKey(name)) {
+			return engineScope.get(name);
 		} else if ( globalScope.containsKey(name) ) {
 			return globalScope.get(name);
 		} else {
@@ -38,7 +41,7 @@ public class JangodContext implements ScriptContext{
 
 	@Override
 	public int getAttributesScope(String name) {
-		if ( engineScope.get().containsKey(name) ) {
+		if ( engineScope.containsKey(name) ) {
 			return ENGINE_SCOPE;
 		}
 		if ( globalScope.containsKey(name) ) {
@@ -51,7 +54,7 @@ public class JangodContext implements ScriptContext{
 	public Bindings getBindings(int scope) {
 		switch (scope) {
 			case ENGINE_SCOPE :
-				return engineScope.get();
+				return engineScope;
 			case GLOBAL_SCOPE :
 				return globalScope;
 			default :
@@ -103,7 +106,7 @@ public class JangodContext implements ScriptContext{
 		}
 		switch (scope) {
 			case ENGINE_SCOPE :
-				engineScope.set(bindings);
+				engineScope = bindings;
 				break;
 			case GLOBAL_SCOPE :
 				globalScope = bindings;

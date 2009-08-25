@@ -11,7 +11,6 @@ import net.asfun.template.compile.Tag;
 import net.asfun.template.parse.JangodParser;
 import net.asfun.template.parse.ParserException;
 import net.asfun.template.util.HelperStringTokenizer;
-import net.asfun.template.util.TemplateLoader;
 
 public class ExtendsTag implements Tag{
 
@@ -25,10 +24,7 @@ public class ExtendsTag implements Tag{
 		}
 		String templateFile = helper[0];
 		try {
-			if ( ! TemplateLoader.isSetup() ) {
-				TemplateLoader.setBase(compiler.fetchGlobalScope("TPL_ROOT_DIR").toString());
-			}
-			JangodParser parser = new JangodParser(TemplateLoader.getReader(templateFile));
+			JangodParser parser = new JangodParser(compiler.getLoader().getReader(templateFile));
 			JangodCompiler parent = compiler.copy();
 			compiler.assignRuntimeScope(JangodCompiler.CHILD_FLAG, true, 1);
 			parent.assignRuntimeScope(JangodCompiler.PARENT_FLAG, true, 1);
@@ -48,7 +44,7 @@ public class ExtendsTag implements Tag{
 	}
 
 	@Override
-	public String getTagName() {
+	public String getName() {
 		return "extends";
 	}
 

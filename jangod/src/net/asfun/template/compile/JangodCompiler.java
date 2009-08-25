@@ -10,6 +10,7 @@ import org.apache.commons.collections.map.ListOrderedMap;
 import net.asfun.template.bin.FloorBindings;
 import net.asfun.template.parse.JangodParser;
 import net.asfun.template.util.JangodLogger;
+import net.asfun.template.util.TemplateLoader;
 import net.asfun.template.util.Variable;
 
 public class JangodCompiler {
@@ -24,17 +25,26 @@ public class JangodCompiler {
 	private int level = 1;
 	private FloorBindings runtime;
 	private ScriptContext context;
+	private TemplateLoader loader;
 	
 	public JangodCompiler(ScriptContext scontext) {
 		context = scontext;
 		runtime = new FloorBindings();
+		loader = new TemplateLoader();
 		initialize();
 	}
 	
 	private JangodCompiler() {}
 	
 	private void initialize() {
-		
+		String root = (String)context.getAttribute(TemplateLoader.ROOT_KEY, ScriptContext.GLOBAL_SCOPE);
+		if ( root != null ) {
+			loader.setBase(root);
+		}
+	}
+	
+	public TemplateLoader getLoader() {
+		return loader;
 	}
 	
 	public JangodCompiler copy() {
@@ -76,13 +86,22 @@ public class JangodCompiler {
 		String varName = var.getName();
 		//find from runtime(tree scope) > engine > global
 		Object obj = runtime.get(varName, level);
+		int lvl = level;
+		while( obj == null && lvl > 1) {
+			obj = runtime.get(varName, --lvl);
+		}
 		if ( obj == null ) {
 			obj = context.getAttribute(varName);
+		}
+		if ( obj == null ) {
+			if( "now".equals(variable) ) {
+				return new java.util.Date();
+			}
 		}
 		if ( obj != null ) {
 			obj = var.resolve(obj);
 		} else {
-			JangodLogger.fine("Can't resolve variable >>> " + varName);
+			JangodLogger.fine("Can't resolve variable >>> " + variable);
 		}
 		return obj;
 	}
@@ -111,10 +130,6 @@ public class JangodCompiler {
 	public void setLevel(int lvl) {
 		level = lvl;
 	}
-	
-	public int getLevel() {
-		return level;
-	}
 
 	public Object fetchGlobalScope(String name) {
 		return context.getAttribute(name, ScriptContext.GLOBAL_SCOPE);
@@ -126,5 +141,9 @@ public class JangodCompiler {
 	
 	public void assignEngineScope(String name, Object value) {
 		context.setAttribute(name, value, ScriptContext.ENGINE_SCOPE);
+	}
+
+	public int getLevel() {
+		return level;
 	}
 }

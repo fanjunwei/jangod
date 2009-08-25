@@ -3,7 +3,7 @@ package net.asfun.template.compile;
 import java.util.List;
 
 
-public interface Tag {
+public interface Tag extends Importable{
 
 	public String compile(List<Node> carries, String helpers, JangodCompiler compiler) throws CompilerException;
 
@@ -14,6 +14,5 @@ public interface Tag {
 	 * @return
 	 */
 	public String getEndTagName();
-	
-	public String getTagName();
+
 }

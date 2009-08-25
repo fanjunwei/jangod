@@ -9,7 +9,6 @@ import net.asfun.template.compile.Tag;
 import net.asfun.template.parse.JangodParser;
 import net.asfun.template.parse.ParserException;
 import net.asfun.template.util.HelperStringTokenizer;
-import net.asfun.template.util.TemplateLoader;
 
 public class IncludeTag implements Tag{
 	
@@ -22,10 +21,7 @@ public class IncludeTag implements Tag{
 		}
 		String templateFile = helper[0];
 		try {
-			if ( ! TemplateLoader.isSetup() ) {
-				TemplateLoader.setBase(compiler.fetchGlobalScope("TPL_ROOT_DIR").toString());
-			}
-			JangodParser parser = new JangodParser(TemplateLoader.getReader(templateFile));
+			JangodParser parser = new JangodParser(compiler.getLoader().getReader(templateFile));
 			JangodCompiler child = compiler.copy();
 			child.assignRuntimeScope(JangodCompiler.INSERT_FLAG, true, 1);
 			return child.render(parser);
@@ -40,7 +36,7 @@ public class IncludeTag implements Tag{
 	}
 
 	@Override
-	public String getTagName() {
+	public String getName() {
 		return "include";
 	}
 

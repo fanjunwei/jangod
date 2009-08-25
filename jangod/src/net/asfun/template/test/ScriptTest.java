@@ -11,7 +11,8 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import net.asfun.template.engine.JangodContext;
+import net.asfun.template.util.TemplateLoader;
+
 
 public class ScriptTest {
 
@@ -19,11 +20,7 @@ public class ScriptTest {
 	public static void test1() {
 		ScriptEngineManager sem = new ScriptEngineManager();
 		ScriptEngine engine = sem.getEngineByName("Jangod");
-		ScriptContext global = new JangodContext();
-		global.setBindings(engine.getBindings(ScriptContext.GLOBAL_SCOPE), ScriptContext.GLOBAL_SCOPE);
-		global.setAttribute("TPL_ROOT_DIR", "D:/workspace/jvalog/war/themes/default/", ScriptContext.GLOBAL_SCOPE);
-		engine.setContext(global);
-		engine.setBindings(engine.createBindings(), ScriptContext.ENGINE_SCOPE);
+		engine.getBindings(ScriptContext.GLOBAL_SCOPE).put(TemplateLoader.ROOT_KEY, "D:/workspace/jvalog/war/themes/default/");
 		Reader reader;
 		try {
 			Map page = new HashMap();

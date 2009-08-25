@@ -9,19 +9,14 @@ import javax.cache.CacheException;
 import javax.cache.CacheFactory;
 import javax.cache.CacheManager;
 import javax.script.Bindings;
-import javax.script.ScriptException;
 
 public class CacheBindings implements Bindings{
 	
 	private Cache cache;
 	
-	public void config(Map<String, String> props) throws ScriptException {
-		try {
-			CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
-			cache = cacheFactory.createCache(props);
-		} catch (CacheException e) {
-			throw new ScriptException(e);
-		}
+	public void config(Map<String, String> props) throws CacheException {
+		CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
+		cache = cacheFactory.createCache(props);
 	}
 
 	@Override

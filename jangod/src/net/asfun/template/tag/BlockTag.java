@@ -69,7 +69,7 @@ public class BlockTag implements Tag{
 	}
 
 	@Override
-	public String getTagName() {
+	public String getName() {
 		return "block";
 	}
 

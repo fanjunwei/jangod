@@ -12,25 +12,33 @@ public class TagLibrary extends SimpleLibrary<Tag>{
 
 	@Override
 	protected void initialize() {
-		Tag forTag = new ForTag();
-		register(forTag.getTagName(), forTag);
-		Tag cycleTag = new CycleTag();
-		register(cycleTag.getTagName(), cycleTag);
-		Tag ifTag = new IfTag();
-		register(ifTag.getTagName(), ifTag);
-		Tag ifcTag = new IfchangeTag();
-		register(ifcTag.getTagName(), ifcTag);
 		Tag extTag = new ExtendsTag();
-		register(extTag.getTagName(), extTag);
+		register(extTag.getName(), extTag);
+		Tag blkTag = new BlockTag();
+		register(blkTag.getName(), blkTag);
 		Tag incTag = new IncludeTag();
-		register(incTag.getTagName(), incTag);
-		Tag blockTag = new BlockTag();
-		register(blockTag.getTagName(), blockTag);
+		register(incTag.getName(), incTag);
+		
+		Tag forTag = new ForTag();
+		register(forTag.getName(), forTag);
+		Tag cycleTag = new CycleTag();
+		register(cycleTag.getName(), cycleTag);
+		Tag ifcTag = new IfchangeTag();
+		register(ifcTag.getName(), ifcTag);
+		
+		Tag ifTag = new IfTag();
+		register(ifTag.getName(), ifTag);	
 		Tag elseTag = new ElseTag();
-		register(elseTag.getTagName(), elseTag);
+		register(elseTag.getName(), elseTag);
+		Tag ifnTag = new IfnotTag();
+		register(ifnTag.getName(), ifnTag);
 	}
 
 	public static Tag getTag(String tagName) throws CompilerException {
 		return lib.fetch(tagName);
+	}
+
+	public static void addTag(Tag tag) {
+		lib.register(tag.getName(), tag);
 	}
 }

@@ -21,7 +21,7 @@ public class ElseTag implements Tag{
 	}
 
 	@Override
-	public String getTagName() {
+	public String getName() {
 		return "else";
 	}
 

@@ -3,10 +3,18 @@ package net.asfun.template.engine;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.script.Bindings;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
+import javax.script.SimpleBindings;
 
 public class JangodEngineFactory implements ScriptEngineFactory {
+	
+	protected Bindings globalBindings = new SimpleBindings();
+	
+	public void setGlobalBindings(Bindings bindings) {
+		globalBindings = bindings;
+	}
 
 	@Override
 	public String getEngineName() {

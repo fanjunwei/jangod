@@ -30,7 +30,7 @@ public class ForTag implements Tag {
 				items = helper[2];
 				break;
 			default :
-				throw new CompilerException("for tag expects 3 or 4 helpers:" + helpers);
+				throw new CompilerException("for tag expects 3 or 4 helpers >>> " + helper.length);
 		}
 		List<Object> it = ObjectIterator.toList(compiler.resolveVariable(items), isReverse);
 //		if ( it.size() == 0 ) {
@@ -61,7 +61,7 @@ public class ForTag implements Tag {
 	}
 
 	@Override
-	public String getTagName() {
+	public String getName() {
 		return "for";
 	}
 
