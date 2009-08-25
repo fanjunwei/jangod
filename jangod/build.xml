@@ -1,0 +1,44 @@
+<project name="jangod" default="jar" basedir=".">
+	<property name="product" value="jangod" />
+	<property name="version" value="0.28" />
+	<property name="src.dir" value="${basedir}/src" />
+	<property name="build.dir" value="${basedir}/build" />
+	<property name="lib.dir" value="${basedir}/lib" />
+	<property name="jar.file" value="${product}-${version}.jar" />
+
+	<path id="classpath">
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<target name="clean">
+		<echo>clean build dir</echo>
+		<delete dir="${build.dir}" quiet="true" />
+	</target>
+
+	<target name="init" depends="clean">
+		<mkdir dir="${build.dir}" />
+	</target>
+
+
+	<target name="compile" depends="init">
+		<echo>compile the source</echo>
+		<javac srcdir="${src.dir}" destdir="${build.dir}">
+			<include name="**/*.java" />
+			<classpath refid="classpath" />
+		</javac>
+		<copy file="${src.dir}/META-INF/services/javax.script.ScriptEngineFactory" tofile="${build.dir}/META-INF/services/javax.script.ScriptEngineFactory" />
+	</target>
+
+	<target name="jar" depends="compile">
+		<jar destfile="${basedir}/${jar.file}">
+			<fileset dir="${build.dir}">
+				<include name="**/*.*" />
+			</fileset>	
+			<manifest>
+				<attribute name="Class-Path" value="commons-beanutils-1.8.0.jar commons-collections-3.2.1.jar commons-lang-2.4.jar commons-logging-1.1.jar jcache-1.0-dev-3.jar" />
+			</manifest>
+		</jar>
+	</target>
+</project>
