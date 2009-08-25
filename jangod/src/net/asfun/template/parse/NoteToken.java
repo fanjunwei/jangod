@@ -16,7 +16,7 @@ public class NoteToken extends Token {
 	 */
 	@Override
 	protected void parse() {
-		content = "";
+//		content = "";
 	}
 	
 	public String toString() {

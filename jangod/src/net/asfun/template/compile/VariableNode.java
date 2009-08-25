@@ -26,10 +26,9 @@ public class VariableNode implements Node{
 //			return ObjectValue.printable(var);
 //		}
 		List<String[]> argss = token.getArgss();
-		int i,j;
 		String[] args;
 		Filter filter;
-		for(i=0; i<filters.size(); i++) {
+		for(int i=0; i<filters.size(); i++) {
 			try {
 				filter = FilterLibrary.getFilter(filters.get(i));
 			} catch (CompilerException ce) {
@@ -40,9 +39,7 @@ public class VariableNode implements Node{
 			if ( args == null ) {
 				var = filter.filter(var);
 			} else {
-				for(j=0; j<args.length; j++) {
-					var = filter.filter(var, args);
-				}
+				var = filter.filter(var, args);
 			}
 		}
 		return ObjectValue.printable(var);

@@ -33,6 +33,7 @@ public class TagNode implements Node{
 	}
 	
 	public String toString() {
-		return "[TagNode:" + tag.getName() + "]";
+//		return "[TagNode:" + tag.getName() + "]";
+		return tag.getName();
 	}
 }

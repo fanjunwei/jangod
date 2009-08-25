@@ -19,7 +19,7 @@ public class IncludeTag implements Tag{
 		if( helper.length != 1) {
 			throw new CompilerException("include tag expects 1 helper >>> " + helper.length);
 		}
-		String templateFile = helper[0];
+		String templateFile = (String) compiler.resolveVariable(helper[0]);
 		try {
 			JangodParser parser = new JangodParser(compiler.getLoader().getReader(templateFile));
 			JangodCompiler child = compiler.copy();

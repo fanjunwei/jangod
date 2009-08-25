@@ -19,7 +19,6 @@ public class IfchangeTag implements Tag{
 		Object older = compiler.fetchRuntimeScope(LASTKEY);
 		String var = helpers;
 		Object test = compiler.resolveVariable(var);
-		compiler.assignRuntimeScope(LASTKEY, test);
 		if ( older == null ) {
 			if ( test == null ) {
 				isChange = false;
@@ -27,6 +26,7 @@ public class IfchangeTag implements Tag{
 		} else if ( older.equals(test) ) {
 			isChange = false;
 		}
+		compiler.assignRuntimeScope(LASTKEY, test);
 		if ( isChange ) {
 			StringBuffer sb = new StringBuffer();
 			for(Node node : carries) {

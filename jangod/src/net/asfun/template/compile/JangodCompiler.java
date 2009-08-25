@@ -82,6 +82,9 @@ public class JangodCompiler {
 	}
 
 	public Object resolveVariable(String variable) {
+		if ( variable.startsWith("\"") || variable.startsWith("'") ) {
+			return variable.substring(1, variable.length()-1);
+		}
 		Variable var = new Variable(variable);
 		String varName = var.getName();
 		//find from runtime(tree scope) > engine > global

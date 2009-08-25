@@ -6,6 +6,7 @@ import net.asfun.template.compile.CompilerException;
 import net.asfun.template.compile.JangodCompiler;
 import net.asfun.template.compile.Node;
 import net.asfun.template.compile.Tag;
+import net.asfun.template.compile.VariableFilter;
 //import net.asfun.template.util.HelperStringTokenizer;
 import net.asfun.template.util.ObjectTruthValue;
 
@@ -23,12 +24,14 @@ public class IfTag implements Tag {
 	@Override
 	public String compile(List<Node> carries, String helpers, JangodCompiler compiler)
 			throws CompilerException {
-		String var = helpers;
-		Object test = compiler.resolveVariable(var);
+//		String var = helpers;
+//		Object test = compiler.resolveVariable(var);
+		Object test = VariableFilter.compute(helpers, compiler);
 		StringBuffer sb = new StringBuffer();
 		if ( ObjectTruthValue.evaluate(test) ) {
 			for(Node node : carries) {
-				if ( "[TagNode:else]".equals(node.toString()) ) {
+//				if ( "[TagNode:else]".equals(node.toString()) ) {
+				if ( "else".equals(node.toString()) ) {
 					break;
 				}
 				sb.append(node.render(compiler));
@@ -39,7 +42,8 @@ public class IfTag implements Tag {
 				if (inElse) {
 					sb.append(node.render(compiler));
 				}
-				if ( "[TagNode:else]".equals(node.toString()) ) {
+//				if ( "[TagNode:else]".equals(node.toString()) ) {
+				if ( "else".equals(node.toString()) ) {
 					inElse = true;
 				}
 			}

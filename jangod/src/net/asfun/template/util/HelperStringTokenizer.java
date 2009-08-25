@@ -2,15 +2,23 @@ package net.asfun.template.util;
 
 import java.util.Iterator;
 
+/**
+ * Whitespace and comma as separator
+ * quote to accept them as normal char
+ * @author fangchq
+ *
+ */
 public class HelperStringTokenizer implements Iterator<String>, Iterable<String>{
 
 	private char[] helpers;
 	private int currPost = 0;
 	private int tokenStart = 0;
 	private int length = 0;
-	private int startChar = -1;
+//	private int startChar = -1;
 	private int lastStart = 0;
 	private boolean useComma = false;
+	private char quoteChar = 0;
+	private boolean inQuote = false;
 	
 	public HelperStringTokenizer(String tobeToken) {
 		helpers = tobeToken.toCharArray();
@@ -47,30 +55,45 @@ public class HelperStringTokenizer implements Iterator<String>, Iterable<String>
 	
 	private String makeToken() {
 		char c = helpers[currPost++];
-		if ( c =='"' | c == '\'' ) {
-			//reach the end of current token
-			if (startChar == c) {
-				return newToken();
-			} 
-			//start a new token
-			else if(startChar == -1) {
-				startChar = c;
-				tokenStart = currPost;
-			}
-			//in a token
-		}
-		else if ( Character.isWhitespace(c) || (useComma && c == ',') ) {
-			if ( Character.isWhitespace(startChar) ) {
-				return newToken();
-			} 
-			else if(startChar == -1) {
-				return makeToken();
+		if ( c == '"' | c == '\'') {
+			if ( inQuote ){
+				if ( quoteChar == c ) {
+					inQuote = false;
+				}
+			} else {
+				inQuote = true;
+				quoteChar = c;
 			}
 		}
-		else if ( startChar == -1) {
-			startChar = 32;// ' '
-			tokenStart = currPost - 1;
-		}
+		if ( Character.isWhitespace(c) || (useComma && c == ',') ) {
+			if ( ! inQuote ) {
+				return newToken();
+			}
+		}	
+//		if ( c =='"' | c == '\'' ) {
+//			//reach the end of current token
+//			if (startChar == c) {
+//				return newToken();
+//			} 
+//			//start a new token
+//			else if(startChar == -1) {
+//				startChar = c;
+//				tokenStart = currPost;
+//			}
+//			//in a token
+//		}
+//		else if ( Character.isWhitespace(c) || (useComma && c == ',') ) {
+//			if ( Character.isWhitespace(startChar) ) {
+//				return newToken();
+//			} 
+//			else if(startChar == -1) {
+//				return makeToken();
+//			}
+//		}
+//		else if ( startChar == -1) {
+//			startChar = 32;// ' '
+//			tokenStart = currPost - 1;
+//		}
 		if ( currPost == length ) {
 			return getEndToken();
 		}
@@ -84,7 +107,7 @@ public class HelperStringTokenizer implements Iterator<String>, Iterable<String>
 	private String newToken() {
 		lastStart = tokenStart;
 		tokenStart = currPost;
-		startChar = -1;
+//		startChar = -1;
 		return String.copyValueOf(helpers, lastStart, currPost-lastStart-1);
 	}
 

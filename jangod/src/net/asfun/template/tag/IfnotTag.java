@@ -18,7 +18,8 @@ public class IfnotTag implements Tag{
 		StringBuffer sb = new StringBuffer();
 		if ( ! ObjectTruthValue.evaluate(test) ) {
 			for(Node node : carries) {
-				if ( "[TagNode:else]".equals(node.toString()) ) {
+//				if ( "[TagNode:else]".equals(node.toString()) ) {
+				if ( "else".equals(node.toString()) ) {
 					break;
 				}
 				sb.append(node.render(compiler));
@@ -29,7 +30,8 @@ public class IfnotTag implements Tag{
 				if (inElse) {
 					sb.append(node.render(compiler));
 				}
-				if ( "[TagNode:else]".equals(node.toString()) ) {
+//				if ( "[TagNode:else]".equals(node.toString()) ) {
+				if ( "else".equals(node.toString()) ) {
 					inElse = true;
 				}
 			}
