@@ -9,6 +9,7 @@ import net.asfun.template.compile.CompilerException;
 import net.asfun.template.compile.JangodCompiler;
 import net.asfun.template.compile.Node;
 import net.asfun.template.compile.Tag;
+//import net.asfun.template.util.HelperStringTokenizer;
 
 public class BlockTag implements Tag{
 	
@@ -19,9 +20,10 @@ public class BlockTag implements Tag{
 	public String compile(List<Node> carries, String helpers, JangodCompiler compiler)
 			throws CompilerException {
 		//init
-		if ( helpers == null ) {
-			throw new CompilerException("block tag expects 1 helper >>> 0");
-		}
+//		String[] helper = new HelperStringTokenizer(helpers).allTokens();
+//		if( helper.length != 1) {
+//			throw new CompilerException("extends tag expects 1 helper >>> " + helper.length);
+//		}
 		String blockName = helpers;
 		//check block name is unique
 		List<String> blockNames = (List<String>) compiler.fetchRuntimeScope(BLOCKNAMES ,1);

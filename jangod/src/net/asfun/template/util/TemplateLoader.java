@@ -3,16 +3,14 @@ package net.asfun.template.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 //import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 
-import net.asfun.template.parse.ParserException;
-
 public class TemplateLoader {
 	
-	public static final String ROOT_KEY = "'TPL\"ROOT,DIR";
 	private String encoding = "utf-8";
 	private String root = null;
 	
@@ -29,20 +27,20 @@ public class TemplateLoader {
 		encoding = enc;
 	}
 	
-	public Reader getReader(String fileName) throws ParserException {
+	public Reader getReader(String fileName) throws IOException {
 		return getReader(fileName, encoding);
 	}
 	
-	public Reader getReader(String fileName, String encoding) throws ParserException {
+	public Reader getReader(String fileName, String encoding) throws IOException {
 		if ( root != null ) {
 			fileName = root + fileName;
 		}
 		try {
 			return new InputStreamReader(new FileInputStream(fileName),encoding);
 		} catch (UnsupportedEncodingException e) {
-			throw new ParserException("Unsupported encoding >>> " + encoding);
+			throw new IOException("Unsupported encoding >>> " + encoding);
 		} catch (FileNotFoundException e) {
-			throw new ParserException(e.getMessage());
+			throw new IOException(e.getMessage());
 		}
 	}
 	

@@ -30,8 +30,6 @@ public class TagLibrary extends SimpleLibrary<Tag>{
 		register(ifTag.getName(), ifTag);	
 		Tag elseTag = new ElseTag();
 		register(elseTag.getName(), elseTag);
-		Tag ifnTag = new IfnotTag();
-		register(ifnTag.getName(), ifnTag);
 	}
 
 	public static Tag getTag(String tagName) throws CompilerException {

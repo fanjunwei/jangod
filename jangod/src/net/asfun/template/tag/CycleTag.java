@@ -32,7 +32,7 @@ public class CycleTag implements Tag{
 				var = values[0];
 				values = (String[]) compiler.fetchRuntimeScope(var);
 			}
-			int forindex = (Integer) compiler.resolveVariable("loop.index");
+			int forindex = (Integer) compiler.retraceVariable("loop.index");
 			return values[forindex % values.length];
 		} else if (helper.length == 3) {
 			HelperStringTokenizer items = new HelperStringTokenizer(helper[0]);

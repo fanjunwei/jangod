@@ -5,12 +5,13 @@ import java.util.Collection;
 
 import net.asfun.template.compile.CompilerException;
 import net.asfun.template.compile.Filter;
+import net.asfun.template.compile.JangodCompiler;
 
 public class LengthFilter implements Filter{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Object filter(Object object, String... arg) throws CompilerException {
+	public Object filter(Object object, JangodCompiler compiler, String... arg) throws CompilerException {
 		if ( null == object ) {
 			return 0;
 		}

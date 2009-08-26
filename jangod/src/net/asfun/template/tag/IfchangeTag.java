@@ -18,7 +18,7 @@ public class IfchangeTag implements Tag{
 		boolean isChange = true;
 		Object older = compiler.fetchRuntimeScope(LASTKEY);
 		String var = helpers;
-		Object test = compiler.resolveVariable(var);
+		Object test = compiler.retraceVariable(var);
 		if ( older == null ) {
 			if ( test == null ) {
 				isChange = false;

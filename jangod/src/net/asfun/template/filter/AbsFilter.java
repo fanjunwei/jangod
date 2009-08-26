@@ -5,11 +5,12 @@ import java.math.BigInteger;
 
 import net.asfun.template.compile.CompilerException;
 import net.asfun.template.compile.Filter;
+import net.asfun.template.compile.JangodCompiler;
 
 public class AbsFilter implements Filter{
 
 	@Override
-	public Object filter(Object object, String... arg) throws CompilerException {
+	public Object filter(Object object, JangodCompiler compiler, String... arg) throws CompilerException {
 		if ( object instanceof Integer ) {
 			return Math.abs((Integer)object);
 		}
@@ -46,7 +47,7 @@ public class AbsFilter implements Filter{
 
 	@Override
 	public String getName() {
-		return "abc";
+		return "abs";
 	}
 
 }

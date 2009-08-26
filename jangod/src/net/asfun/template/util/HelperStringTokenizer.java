@@ -14,7 +14,8 @@ public class HelperStringTokenizer implements Iterator<String>, Iterable<String>
 	private int currPost = 0;
 	private int tokenStart = 0;
 	private int length = 0;
-//	private int startChar = -1;
+//	private int startChar = -1;//change to save quote in helper 
+	private char lastChar = ' ';
 	private int lastStart = 0;
 	private boolean useComma = false;
 	private char quoteChar = 0;
@@ -46,6 +47,7 @@ public class HelperStringTokenizer implements Iterator<String>, Iterable<String>
 		String token;
 		while( currPost < length ) {
 			token = makeToken();
+			lastChar = helpers[currPost-1];
 			if (token != null) {
 				return token;
 			}
@@ -54,22 +56,7 @@ public class HelperStringTokenizer implements Iterator<String>, Iterable<String>
 	}
 	
 	private String makeToken() {
-		char c = helpers[currPost++];
-		if ( c == '"' | c == '\'') {
-			if ( inQuote ){
-				if ( quoteChar == c ) {
-					inQuote = false;
-				}
-			} else {
-				inQuote = true;
-				quoteChar = c;
-			}
-		}
-		if ( Character.isWhitespace(c) || (useComma && c == ',') ) {
-			if ( ! inQuote ) {
-				return newToken();
-			}
-		}	
+		//change to save quote in helper            -----start
 //		if ( c =='"' | c == '\'' ) {
 //			//reach the end of current token
 //			if (startChar == c) {
@@ -94,6 +81,23 @@ public class HelperStringTokenizer implements Iterator<String>, Iterable<String>
 //			startChar = 32;// ' '
 //			tokenStart = currPost - 1;
 //		}
+		char c = helpers[currPost++];
+		if ( c == '"' | c == '\'') {
+			if ( inQuote ){
+				if ( quoteChar == c ) {
+					inQuote = false;
+				}
+			} else {
+				inQuote = true;
+				quoteChar = c;
+			}
+		}
+		if ( Character.isWhitespace(c) || (useComma && c == ',') ) {
+			if ( ! inQuote ) {
+				return newToken();
+			}
+		}
+		//change to save quote in helper             ----end
 		if ( currPost == length ) {
 			return getEndToken();
 		}
@@ -107,7 +111,10 @@ public class HelperStringTokenizer implements Iterator<String>, Iterable<String>
 	private String newToken() {
 		lastStart = tokenStart;
 		tokenStart = currPost;
-//		startChar = -1;
+		if ( Character.isWhitespace(lastChar) || (useComma && lastChar == ',')) {
+			return null;
+		}
+//		startChar = -1;//change to save quote in helper 
 		return String.copyValueOf(helpers, lastStart, currPost-lastStart-1);
 	}
 

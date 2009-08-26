@@ -14,6 +14,8 @@ import net.asfun.template.util.JangodLogger;
 
 public class Configuration {
 	
+	public static final String CONFIG_VAR = "'CFG\"CURRENT";
+	
 	private String encoding = "utf-8";
 	private Locale locale = Locale.CHINESE;
 	private TimeZone timezone = TimeZone.getDefault();

@@ -1,5 +1,6 @@
 package net.asfun.template.tag;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.collections.map.ListOrderedMap;
@@ -11,6 +12,7 @@ import net.asfun.template.compile.Tag;
 import net.asfun.template.parse.JangodParser;
 import net.asfun.template.parse.ParserException;
 import net.asfun.template.util.HelperStringTokenizer;
+import net.asfun.template.util.TemplateLoader;
 
 public class ExtendsTag implements Tag{
 
@@ -22,9 +24,11 @@ public class ExtendsTag implements Tag{
 		if( helper.length != 1) {
 			throw new CompilerException("extends tag expects 1 helper >>> " + helper.length);
 		}
-		String templateFile = (String) compiler.resolveVariable(helper[0]);
+		String templateFile = compiler.resolveString(helper[0]);
 		try {
-			JangodParser parser = new JangodParser(compiler.getLoader().getReader(templateFile));
+			TemplateLoader loader = new TemplateLoader();
+			loader.setBase(compiler.getConfig().getTemplateRoot());
+			JangodParser parser = new JangodParser(loader.getReader(templateFile));
 			JangodCompiler parent = compiler.copy();
 			compiler.assignRuntimeScope(JangodCompiler.CHILD_FLAG, true, 1);
 			parent.assignRuntimeScope(JangodCompiler.PARENT_FLAG, true, 1);
@@ -34,6 +38,8 @@ public class ExtendsTag implements Tag{
 			compiler.assignEngineScope(JangodCompiler.SEMI_RENDER, semi);
 			return "";
 		} catch (ParserException e) {
+			throw new CompilerException(e.getMessage());
+		} catch (IOException e) {
 			throw new CompilerException(e.getMessage());
 		}
 	}

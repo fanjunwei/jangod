@@ -1,4 +1,5 @@
 <project name="jangod" default="jar" basedir=".">
+	<property name="jlogdir" value="${basedir}/../jvalog/war/WEB-INF/lib" />
 	<property name="product" value="jangod" />
 	<property name="version" value="0.28" />
 	<property name="src.dir" value="${basedir}/src" />
@@ -40,5 +41,6 @@
 				<attribute name="Class-Path" value="commons-beanutils-1.8.0.jar commons-collections-3.2.1.jar commons-lang-2.4.jar commons-logging-1.1.jar jcache-1.0-dev-3.jar" />
 			</manifest>
 		</jar>
+		<copy file="${basedir}/${jar.file}" tofile="${jlogdir}/${jar.file}" />
 	</target>
 </project>

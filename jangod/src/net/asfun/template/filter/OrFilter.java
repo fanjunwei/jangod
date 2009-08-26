@@ -5,23 +5,28 @@ import net.asfun.template.compile.Filter;
 import net.asfun.template.compile.JangodCompiler;
 import net.asfun.template.util.ObjectTruthValue;
 
-public class DefaultFilter implements Filter {
+public class OrFilter implements Filter{
 
 	@Override
-	public Object filter(Object object, JangodCompiler compiler, String... arg) throws CompilerException {
+	public Object filter(Object object, JangodCompiler compiler, String... arg)
+			throws CompilerException {
 		if ( ObjectTruthValue.evaluate(object) ) {
-			return object;
+			return true;
 		} else {
-			if ( arg.length != 1) {
-				throw new CompilerException("filter default expects 1 arg >>> " + arg.length);
+			Object test;
+			for(String var : arg) {
+				test = compiler.retraceVariable(var);
+				if ( ObjectTruthValue.evaluate(test) ) {
+					return true;
+				}
 			}
-			return compiler.resolveObject(arg[0]);
+			return false;
 		}
 	}
 
 	@Override
 	public String getName() {
-		return "default";
+		return "or";
 	}
 
 }

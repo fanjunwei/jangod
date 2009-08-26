@@ -19,7 +19,7 @@ public class VariableNode implements Node{
 	@Override
 	public String render(JangodCompiler compiler) throws CompilerException {
 		compiler.setLevel(level);
-		Object var = compiler.resolveVariable(token.getVariable());
+		Object var = compiler.retraceVariable(token.getVariable());
 		//filters
 		List<String> filters = token.getFilters();
 //		if ( filters.isEmpty() ) {
@@ -37,9 +37,9 @@ public class VariableNode implements Node{
 			}
 			args = argss.get(i);
 			if ( args == null ) {
-				var = filter.filter(var);
+				var = filter.filter(var, compiler);
 			} else {
-				var = filter.filter(var, args);
+				var = filter.filter(var, compiler, args);
 			}
 		}
 		return ObjectValue.printable(var);

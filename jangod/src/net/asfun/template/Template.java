@@ -11,7 +11,6 @@ import javax.script.SimpleBindings;
 import net.asfun.template.bin.CacheBindings;
 import net.asfun.template.bin.LazyBindings;
 import net.asfun.template.engine.JangodEngineFactory;
-import net.asfun.template.parse.ParserException;
 import net.asfun.template.util.TemplateLoader;
 
 
@@ -44,7 +43,7 @@ public class Template {
 	}
 	
 	public void setCommonBindings(Bindings bindings) {
-		bindings.put(TemplateLoader.ROOT_KEY, config.getTemplateRoot());
+		bindings.put(Configuration.CONFIG_VAR, config);
 		factory.setGlobalBindings(bindings);
 	}
 	
@@ -69,7 +68,7 @@ public class Template {
 			return (String) engine.eval(loader.getReader(tpl, encoding), engineBindings);
 		} catch (ScriptException e) {
 			throw new TemplateException(e.getMessage());
-		} catch (ParserException e) {
+		} catch (IOException e) {
 			throw new TemplateException(e.getMessage());
 		}
 	}

@@ -15,7 +15,7 @@ public class VariableFilter {
 		} catch (ParserException e) {
 			throw new CompilerException(e.getMessage());
 		}
-		Object var = compiler.resolveVariable(fp.getVariable());
+		Object var = compiler.retraceVariable(fp.getVariable());
 		List<String> filters = fp.getFilters();
 //		if ( filters.isEmpty() ) {
 //			return var;
@@ -32,9 +32,9 @@ public class VariableFilter {
 			}
 			args = argss.get(i);
 			if ( args == null ) {
-				var = filter.filter(var);
+				var = filter.filter(var, compiler);
 			} else {
-				var = filter.filter(var, args);
+				var = filter.filter(var, compiler, args);
 			}
 		}
 		return var;

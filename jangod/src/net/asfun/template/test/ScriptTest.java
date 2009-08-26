@@ -11,7 +11,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import net.asfun.template.util.TemplateLoader;
+import net.asfun.template.Configuration;
 
 
 public class ScriptTest {
@@ -20,7 +20,9 @@ public class ScriptTest {
 	public static void test1() {
 		ScriptEngineManager sem = new ScriptEngineManager();
 		ScriptEngine engine = sem.getEngineByName("Jangod");
-		engine.getBindings(ScriptContext.GLOBAL_SCOPE).put(TemplateLoader.ROOT_KEY, "D:/workspace/jvalog/war/themes/default/");
+		Configuration config = Configuration.getDefaultConfig();
+		config.setTemplateRoot("D:/workspace/jvalog/war/themes/default/");
+		engine.getBindings(ScriptContext.GLOBAL_SCOPE).put(Configuration.CONFIG_VAR, config);
 		Reader reader;
 		try {
 			Map page = new HashMap();

@@ -94,14 +94,20 @@ public class FilterParser {
 	private String parseArg(String argString, List<String> args) throws ParserException {
 		//"ar|g1:",arg2   or 'a:"b"|c'|filter2  or arg3
 		if( argString.charAt(0) == '"' ) {
-			argString = argString.substring(1);
-			int post = argString.indexOf('"');
+			//change to save quote in arg
+//			argString = argString.substring(1);
+//			int post = argString.indexOf('"');
+			int post = argString.substring(1).indexOf('"');
 			if ( post < 0 ) {
 				throw new ParserException("filter argument doesn't match quotes");
 			} else {
-				args.add(argString.substring(0,post));
-				if( post < argString.length() - 2) {
-					argString = argString.substring(post+1).trim();
+				//change to save quote in arg
+//				args.add(argString.substring(0,post));
+//				if( post < argString.length() - 2) {
+//					argString = argString.substring(post+1).trim();
+				args.add(argString.substring(0,post+2));
+				if( post < argString.length() - 3) {
+					argString = argString.substring(post+2).trim();
 					if ( argString.charAt(0) == '|' ) {
 						content = argString.substring(1).trim();
 						return null;
@@ -116,14 +122,20 @@ public class FilterParser {
 			}
 		}
 		else if( argString.charAt(0) == '\'' ) {
-			argString = argString.substring(1);
-			int post = argString.indexOf('\'');
+			//change to save quote in arg
+//			argString = argString.substring(1);
+//			int post = argString.indexOf('\'');
+			int post = argString.substring(1).indexOf('\'');
 			if ( post < 0 ) {
 				throw new ParserException("filter argument doesn't match quotes");
 			} else {
-				args.add(argString.substring(0,post));
-				if( post < argString.length() - 2) {
-					argString = argString.substring(post+1).trim();
+				//change to save quote in arg
+//				args.add(argString.substring(0,post));
+//				if( post < argString.length() - 2) {
+//					argString = argString.substring(post+1).trim();
+				args.add(argString.substring(0,post+2));
+				if( post < argString.length() - 3) {
+					argString = argString.substring(post+2).trim();
 					if ( argString.charAt(0) == '|' ) {
 						content = argString.substring(1).trim();
 						return null;

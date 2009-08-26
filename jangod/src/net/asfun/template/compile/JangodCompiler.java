@@ -7,10 +7,10 @@ import javax.script.ScriptContext;
 import org.apache.commons.collections.MapIterator;
 import org.apache.commons.collections.map.ListOrderedMap;
 
+import net.asfun.template.Configuration;
 import net.asfun.template.bin.FloorBindings;
 import net.asfun.template.parse.JangodParser;
 import net.asfun.template.util.JangodLogger;
-import net.asfun.template.util.TemplateLoader;
 import net.asfun.template.util.Variable;
 
 public class JangodCompiler {
@@ -25,26 +25,25 @@ public class JangodCompiler {
 	private int level = 1;
 	private FloorBindings runtime;
 	private ScriptContext context;
-	private TemplateLoader loader;
+	private Configuration config;
 	
 	public JangodCompiler(ScriptContext scontext) {
 		context = scontext;
 		runtime = new FloorBindings();
-		loader = new TemplateLoader();
 		initialize();
 	}
 	
 	private JangodCompiler() {}
 	
 	private void initialize() {
-		String root = (String)context.getAttribute(TemplateLoader.ROOT_KEY, ScriptContext.GLOBAL_SCOPE);
-		if ( root != null ) {
-			loader.setBase(root);
+		config = (Configuration) context.getAttribute(Configuration.CONFIG_VAR, ScriptContext.GLOBAL_SCOPE);
+		if ( config == null ) {
+			config = Configuration.getDefaultConfig();
 		}
 	}
 	
-	public TemplateLoader getLoader() {
-		return loader;
+	public Configuration getConfig() {
+		return config;
 	}
 	
 	public JangodCompiler copy() {
@@ -81,10 +80,7 @@ public class JangodCompiler {
 		return buff.toString();
 	}
 
-	public Object resolveVariable(String variable) {
-		if ( variable.startsWith("\"") || variable.startsWith("'") ) {
-			return variable.substring(1, variable.length()-1);
-		}
+	public Object retraceVariable(String variable) {
 		Variable var = new Variable(variable);
 		String varName = var.getName();
 		//find from runtime(tree scope) > engine > global
@@ -107,6 +103,26 @@ public class JangodCompiler {
 			JangodLogger.fine("Can't resolve variable >>> " + variable);
 		}
 		return obj;
+	}
+	
+	public String resolveString(String variable) {
+		if ( variable.startsWith("\"") || variable.startsWith("'") ) {
+			return variable.substring(1, variable.length()-1);
+		} else {
+			Object val = retraceVariable(variable);
+			if ( val == null ) return variable;
+			return val.toString();
+		}	
+	}
+	
+	public Object resolveObject(String variable) {
+		if ( variable.startsWith("\"") || variable.startsWith("'") ) {
+			return variable.substring(1, variable.length()-1);
+		} else {
+			Object val = retraceVariable(variable);
+			if ( val == null ) return variable;
+			return val;
+		}	
 	}
 	
 	/**
