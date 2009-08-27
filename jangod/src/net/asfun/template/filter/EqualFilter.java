@@ -3,6 +3,7 @@ package net.asfun.template.filter;
 import net.asfun.template.compile.CompilerException;
 import net.asfun.template.compile.Filter;
 import net.asfun.template.compile.JangodCompiler;
+import net.asfun.template.util.ObjectStringEqual;
 
 public class EqualFilter implements Filter{
 
@@ -11,12 +12,20 @@ public class EqualFilter implements Filter{
 		if ( arg.length != 1 ) {
 			throw new CompilerException("filter equal expects 1 arg >>> " + arg.length);
 		}
-		if ( object == null ) {
-			return ! ( arg[0].startsWith("'") 
-					|| arg[0].startsWith("\"")
-					|| compiler.retraceVariable(arg[0]) != null );
+		Object argObj ;
+		boolean isNull = false;
+		if ( arg[0].startsWith("'") || arg[0].startsWith("\"") ) {
+			argObj = arg[0].substring(1, arg[0].length()-1);
 		} else {
-			return object.equals(compiler.resolveObject(arg[0]));
+			argObj = compiler.retraceVariable(arg[0]);
+			if ( isNull = argObj == null ) {
+				argObj = arg[0];
+			}
+		}
+		if ( object == null ) {
+			return isNull;
+		} else {
+			return ObjectStringEqual.evaluate(object, argObj);
 		}
 	}
 

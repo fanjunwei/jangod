@@ -18,7 +18,11 @@ public class AddFilter implements Filter{
 		Object toAdd = compiler.resolveObject(arg[0]);
 		Number num;
 		if ( String.class.isAssignableFrom(toAdd.getClass()) ) {
-			num = new BigDecimal(toAdd.toString());
+			try { 
+				num = new BigDecimal(toAdd.toString());
+			} catch (Exception e) {
+				throw new CompilerException("filter add arg can't cast to number >>> " + toAdd);
+			}
 		} else if (Number.class.isAssignableFrom(toAdd.getClass()) ) {
 			num = (Number) toAdd;
 		} else {

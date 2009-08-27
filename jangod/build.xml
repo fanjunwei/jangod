@@ -13,13 +13,9 @@
 		</fileset>
 	</path>
 
-	<target name="clean">
-		<echo>clean build dir</echo>
-		<delete dir="${build.dir}" quiet="true" />
-	</target>
-
-	<target name="init" depends="clean">
+	<target name="init">
 		<mkdir dir="${build.dir}" />
+		<delete file="${basedir}/${jar.file}" quiet="true"/>
 	</target>
 
 
@@ -42,5 +38,6 @@
 			</manifest>
 		</jar>
 		<copy file="${basedir}/${jar.file}" tofile="${jlogdir}/${jar.file}" />
+		<delete dir="${build.dir}" quiet="true"/>
 	</target>
 </project>

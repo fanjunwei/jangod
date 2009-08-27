@@ -3,7 +3,6 @@ package net.asfun.template.filter;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
-import net.asfun.template.Configuration;
 import net.asfun.template.compile.CompilerException;
 import net.asfun.template.compile.Filter;
 import net.asfun.template.compile.JangodCompiler;
@@ -19,8 +18,7 @@ public class DatetimeFilter implements Filter{
 		SimpleDateFormat sdf;
 		if ( arg.length == 1 ) {
 			sdf = new SimpleDateFormat(compiler.resolveString(arg[0]));
-			//TODO compiler.getConfig();
-			sdf.setTimeZone(Configuration.getDefaultConfig().getTimezone());
+			sdf.setTimeZone(compiler.getConfig().getTimezone());
 		} else if ( arg.length == 2 ) {
 			sdf = new SimpleDateFormat(compiler.resolveString(arg[0]));
 			sdf.setTimeZone(TimeZone.getTimeZone(compiler.resolveString(arg[1])));
