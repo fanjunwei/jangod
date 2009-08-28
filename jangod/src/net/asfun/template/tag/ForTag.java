@@ -6,6 +6,7 @@ import net.asfun.template.compile.CompilerException;
 import net.asfun.template.compile.JangodCompiler;
 import net.asfun.template.compile.Tag;
 import net.asfun.template.compile.VariableFilter;
+import net.asfun.template.util.ForLoop;
 import net.asfun.template.util.HelperStringTokenizer;
 import net.asfun.template.util.ObjectIterator;
 import net.asfun.template.compile.Node;
@@ -26,25 +27,17 @@ public class ForTag implements Tag {
 		}
 		String item = helper[0];
 		Object collection = VariableFilter.compute( helper[2], compiler);
-		List<Object> it = ObjectIterator.toList(collection, false);
-//		if ( it.size() == 0 ) {
-//			return "";
-//		}
+		ForLoop loop = ObjectIterator.getLoop(collection);
+		
 		int level = compiler.getLevel() + 1;
-		ForLoop loop = (ForLoop) compiler.fetchRuntimeScope("loop", level);
-		if ( loop == null ) {
-			loop = new ForLoop(it.size());
-			compiler.assignRuntimeScope("loop", loop, level);
-		}
+		compiler.assignRuntimeScope("loop", loop, level);
 		StringBuffer buff = new StringBuffer();
-		for(Object obj : it) {
+		while ( loop.hasNext() ) {
 			//set item variable
-			compiler.assignRuntimeScope(item, obj, level);
+			compiler.assignRuntimeScope(item, loop.next(), level);
 			for(Node node : carries) {
 				buff.append(node.render(compiler));
 			}
-			//change loop variable
-			loop.next();
 		}
 		return buff.toString();
 	}

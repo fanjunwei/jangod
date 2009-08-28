@@ -17,7 +17,7 @@ public class ReverseFilter implements Filter{
 			return null;
 		}
 		//collection
-		if ( Collection.class.isAssignableFrom(object.getClass()) ) {
+		if ( object instanceof Collection ) {
 			Object[] origin = ((Collection)object).toArray();
 			int length = origin.length;
 			Object[] res = new Object[length];
@@ -38,7 +38,7 @@ public class ReverseFilter implements Filter{
 			return res;
 		}
 		//string
-		if ( String.class.isAssignableFrom(object.getClass()) ) {
+		if ( object instanceof String ) {
 			String origin = (String)object;
 			int length = origin.length();
 			char[] res = new char[length];

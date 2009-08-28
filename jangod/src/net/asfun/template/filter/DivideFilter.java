@@ -17,9 +17,9 @@ public class DivideFilter implements Filter{
 		}
 		Object toMul = compiler.resolveObject(arg[0]);
 		Number num;
-		if ( String.class.isAssignableFrom(toMul.getClass()) ) {
+		if ( toMul instanceof String ) {
 			num = new BigDecimal(toMul.toString());
-		} else if (Number.class.isAssignableFrom(toMul.getClass()) ) {
+		} else if ( toMul instanceof Number ) {
 			num = (Number) toMul;
 		} else {
 			return object;

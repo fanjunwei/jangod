@@ -12,7 +12,7 @@ public class DivisibleFilter implements Filter{
 		if ( object == null ) {
 			return false;
 		}
-		if ( Number.class.isAssignableFrom(object.getClass()) ) {
+		if ( object instanceof Number ) {
 			if ( arg.length != 1 ) {
 				throw new CompilerException("filter divisible expects 1 arg >>> " + arg.length);
 			}

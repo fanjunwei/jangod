@@ -12,11 +12,11 @@ public class ObjectStringEqual {
 			if ( strObj == null ) return false;
 			if (String.class.isAssignableFrom(strObj.getClass())) {
 				String str = (String)strObj;
-				if (String.class.isAssignableFrom(object.getClass())) {
+				if ( object instanceof String ) {
 					return str.equals(object);
 				}
 				
-				if (Integer.class.isAssignableFrom(object.getClass())) {
+				if ( object instanceof Integer ) {
 					try {
 						return Integer.valueOf(str).equals(object);
 					} catch (Exception e) {
@@ -24,7 +24,7 @@ public class ObjectStringEqual {
 					}
 				}
 				
-				if (Long.class.isAssignableFrom(object.getClass())) {
+				if ( object instanceof Long ) {
 					try {
 						return Long.valueOf(str).equals(object);
 					} catch (Exception e) {
@@ -32,7 +32,7 @@ public class ObjectStringEqual {
 					}
 				}
 				
-				if (Boolean.class.isAssignableFrom(object.getClass())) {
+				if ( object instanceof Boolean ) {
 					if ( (Boolean)object ) {
 						return str.equalsIgnoreCase("True");
 					} else {
@@ -40,7 +40,7 @@ public class ObjectStringEqual {
 					}
 				}
 				
-				if (Float.class.isAssignableFrom(object.getClass())) {
+				if ( object instanceof Float ) {
 					try {
 						return Float.valueOf(str).equals(object);
 					} catch (Exception e) {
@@ -48,7 +48,7 @@ public class ObjectStringEqual {
 					}
 				}
 				
-				if (Short.class.isAssignableFrom(object.getClass())) {
+				if ( object instanceof Short ) {
 					try {
 						return Short.valueOf(str).equals(object);
 					} catch (Exception e) {
@@ -56,7 +56,7 @@ public class ObjectStringEqual {
 					}
 				}
 				
-				if (Double.class.isAssignableFrom(object.getClass())) {
+				if ( object instanceof Double ) {
 					try {
 						return Double.valueOf(str).equals(object);
 					} catch (Exception e) {
@@ -64,7 +64,7 @@ public class ObjectStringEqual {
 					}
 				}
 				
-				if (Byte.class.isAssignableFrom(object.getClass())) {
+				if ( object instanceof Byte ) {
 					try {
 						return Byte.valueOf(str).equals(object);
 					} catch (Exception e) {
@@ -72,7 +72,7 @@ public class ObjectStringEqual {
 					}
 				}
 				
-				if (BigInteger.class.isAssignableFrom(object.getClass())) {
+				if ( object instanceof BigInteger ) {
 					try {
 						return Long.valueOf(str).longValue() == ((BigInteger)object).longValue();
 					} catch (Exception e) {
@@ -80,7 +80,7 @@ public class ObjectStringEqual {
 					}
 				}
 				
-				if (BigDecimal.class.isAssignableFrom(object.getClass())) {
+				if ( object instanceof BigDecimal ) {
 					try {
 						return Double.valueOf(str).doubleValue() == ((BigDecimal)object).doubleValue();
 					} catch (Exception e) {

@@ -33,7 +33,7 @@ public class ContainFilter implements Filter{
 			}
 		}
 		//collection
-		if ( Collection.class.isAssignableFrom(object.getClass()) ) {
+		if ( object instanceof Collection ) {
 			Iterator it = ((Collection)object).iterator();
 			Object item;
 			while(it.hasNext()) {
@@ -65,7 +65,7 @@ public class ContainFilter implements Filter{
 			return false;
 		}
 		//map
-		if( Map.class.isAssignableFrom(object.getClass()) ) {
+		if( object instanceof Map ) {
 			Iterator it = ((Map)object).values().iterator();
 			Object item;
 			while(it.hasNext()) {
@@ -82,7 +82,7 @@ public class ContainFilter implements Filter{
 			return false;
 		}
 		//string
-		if ( String.class.isAssignableFrom(object.getClass()) ) {
+		if ( object instanceof String ) {
 			return object.toString().contains(argObj.toString());
 		}
 		throw new CompilerException("filter contain can't be applied to >>> " + object.getClass().getName());

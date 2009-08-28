@@ -2,43 +2,47 @@ package net.asfun.template.util;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.collections.iterators.ArrayIterator;
+
 
 public class ObjectIterator {
-
+	
 	@SuppressWarnings("unchecked")
-	public static List<Object> toList(Object obj, boolean isReverse) {
-		ArrayList<Object> res = new ArrayList<Object>();
+	public static ForLoop getLoop(Object obj) {
 		if ( obj == null ) {
-			return res;
+			return new ForLoop(new ArrayList<Object>().iterator(), 0);
 		}
-		if ( obj.getClass().isArray() ) {
-			int length = Array.getLength(obj);
-			if ( isReverse ) {
-				for(int i=length; i>0; ) {
-					res.add(Array.get(obj, --i));
-				}
-			} else {
-				for(int i=0; i<length; i++) {
-					res.add(Array.get(obj, i));
-				}
-			}
-		} else {
-			Iterator it = null;
-			if (obj instanceof Iterable) {
-				it = ((Iterable) obj).iterator();
-			}
-			if (obj instanceof Iterator) {
-				it = (Iterator)obj;
-			}
-			if ( it != null) {
-				//TODO reverse 
-				while(it.hasNext()) {
-					res.add(it.next());
-				}
-			}
+		//collection
+		if( obj instanceof Collection ) {
+			Collection<Object> clt = (Collection<Object>)obj;
+			return new ForLoop(clt.iterator(), clt.size());
 		}
-		return res;
+		//array
+		if( obj.getClass().isArray() ) {
+			return new ForLoop(new ArrayIterator(obj), Array.getLength(obj));
+		}
+		//map
+		if ( obj instanceof Map ) {
+			Collection<Object> clt = ((Map)obj).values();
+			return new ForLoop(clt.iterator(), clt.size());
+		}
+		//iterable,iterator
+		if ( obj instanceof Iterable ) {
+			//TODO fix the loop if length is unknown.
+			return new ForLoop(((Iterable)obj).iterator());
+		}
+		if ( obj instanceof Iterator ) {
+			//TODO fix the loop if length is unknown.
+			return new ForLoop((Iterator)obj);
+		}
+		//others
+		ArrayList res = new ArrayList<Object>();
+		res.add(obj);
+		return new ForLoop(res.iterator(), 1);
 	}
+
 }

@@ -17,13 +17,13 @@ public class AddFilter implements Filter{
 		}
 		Object toAdd = compiler.resolveObject(arg[0]);
 		Number num;
-		if ( String.class.isAssignableFrom(toAdd.getClass()) ) {
+		if ( toAdd instanceof String ) {
 			try { 
 				num = new BigDecimal(toAdd.toString());
 			} catch (Exception e) {
 				throw new CompilerException("filter add arg can't cast to number >>> " + toAdd);
 			}
-		} else if (Number.class.isAssignableFrom(toAdd.getClass()) ) {
+		} else if ( toAdd instanceof Number ) {
 			num = (Number) toAdd;
 		} else {
 			return object;

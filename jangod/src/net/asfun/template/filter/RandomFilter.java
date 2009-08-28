@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 
 import net.asfun.template.compile.CompilerException;
 import net.asfun.template.compile.Filter;
@@ -19,7 +20,7 @@ public class RandomFilter implements Filter{
 			return null;
 		}
 		//collection
-		if ( Collection.class.isAssignableFrom(object.getClass()) ) {
+		if ( object instanceof Collection ) {
 			Collection clt = (Collection)object;
 			Iterator it = clt.iterator();
 			int size = clt.size();
@@ -43,10 +44,35 @@ public class RandomFilter implements Filter{
 			if ( index == size ) index = 0;
 			return Array.get(object, index);
 		}
+		//map
+		if ( object instanceof Map ) {
+			Map map = (Map)object;
+			Iterator it = map.values().iterator();
+			int size = map.size();
+			if ( size == 0 ) {
+				return null;
+			}
+			int index = Double.valueOf(Math.random() * size).intValue();
+			if (index == size) index = 0;
+			while( index-- > 0) {
+				it.next();
+			}
+			return it.next();
+		}
 		//number
-		if ( Number.class.isAssignableFrom(object.getClass()) ) {
+		if ( object instanceof Number ) {
 			return BigDecimal.valueOf(((Number)object).doubleValue() * Math.random()).longValue();
 		}
+		//string
+		if ( object instanceof String ) {
+			try {
+				return BigDecimal.valueOf(Double.valueOf((String)object).doubleValue() * Math.random()).longValue();
+			} catch (Exception e) {
+				return 0;
+			}
+		}
+		//TODO iterable
+		//TODO iterator
 		return object;
 	}
 
