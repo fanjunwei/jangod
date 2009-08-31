@@ -50,6 +50,7 @@ public class JangodCompiler {
 		JangodCompiler compiler = new JangodCompiler();
 		compiler.context = context;
 		compiler.runtime = runtime.copy();
+		compiler.config = config;
 		return compiler;
 	}
 	

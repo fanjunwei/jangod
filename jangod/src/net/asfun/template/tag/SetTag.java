@@ -1,17 +1,20 @@
-package net.asfun.template.inst;
+package net.asfun.template.tag;
+
+import java.util.List;
 
 import net.asfun.template.compile.CompilerException;
-import net.asfun.template.compile.Instruction;
 import net.asfun.template.compile.JangodCompiler;
+import net.asfun.template.compile.Node;
+import net.asfun.template.compile.Tag;
 import net.asfun.template.compile.VariableFilter;
 import net.asfun.template.util.HelperStringTokenizer;
 
 /**
- * {! set var post.id|equal:'12' !}
+ * {% set var post.id|equal:'12' %}
  * @author fangchq
  *
  */
-public class SetInst implements Instruction{
+public class SetTag implements Tag{
 
 
 	@Override
@@ -20,13 +23,19 @@ public class SetInst implements Instruction{
 	}
 
 	@Override
-	public void act(String helpers, JangodCompiler compiler) throws CompilerException {
+	public String compile(List<Node> carries, String helpers, JangodCompiler compiler) throws CompilerException {
 		String[] helper = new HelperStringTokenizer(helpers).allTokens();
 		if ( helper.length != 2 ) {
 			throw new CompilerException("set inst expects 2 helper >>> " + helper.length);
 		}
 		Object value = VariableFilter.compute(helper[1], compiler);
 		compiler.assignEngineScope(helper[0], value);
+		return "";
+	}
+
+	@Override
+	public String getEndTagName() {
+		return null;
 	}
 
 }

@@ -11,7 +11,7 @@ public class TagNode implements Node{
 	private int level;
 	private TagToken master;
 	private List<Node> carries;
-	protected String endTagName;
+	private String endTagName;
 	private Tag tag;
 
 	public TagNode(TagToken token, JangodParser parser, int lvl) throws CompilerException {
@@ -22,7 +22,7 @@ public class TagNode implements Node{
 		if ( endTagName != null ) {
 			carries = NodeList.makeList(parser, endTagName, level + 1);
 		} else {
-			carries = new ArrayList<Node>();
+			carries = new ArrayList<Node>(0);
 		}
 	}
 

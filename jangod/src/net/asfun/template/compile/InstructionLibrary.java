@@ -1,6 +1,6 @@
 package net.asfun.template.compile;
 
-import net.asfun.template.inst.*;
+//import net.asfun.template.inst.*;
 
 public class InstructionLibrary extends SimpleLibrary<Instruction>{
 
@@ -12,8 +12,7 @@ public class InstructionLibrary extends SimpleLibrary<Instruction>{
 	
 	@Override
 	protected void initialize() {
-		Instruction set = new SetInst();
-		register(set.getName(), set);
+		//TODO someday
 	}
 	
 	public static Instruction getInstruction(String name) throws CompilerException {

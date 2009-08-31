@@ -9,7 +9,9 @@ import net.asfun.template.compile.Tag;
 import net.asfun.template.util.HelperStringTokenizer;
 
 /**
- * {% cycle a,b,c %}   {% cycle a,b,c as d %} {% cycle d %}
+ * {% cycle a,b,c %}   
+ * {% cycle a,b,c as d %} 
+ * {% cycle d %}
  * @author fangchq
  *
  */
@@ -22,22 +24,32 @@ public class CycleTag implements Tag{
 		String[] values;
 		String var = null;
 		HelperStringTokenizer tk = new HelperStringTokenizer(helpers);
-		//TODO 兼容 逗号和空格的分隔形式
+		//TODO tokenize in one time
 		String[] helper = tk.allTokens();
 		if (helper.length == 1) {
 			HelperStringTokenizer items = new HelperStringTokenizer(helper[0]);
 			items.splitComma(true);
 			values = items.allTokens();
+			int forindex = (Integer) compiler.retraceVariable("loop.index");
 			if (values.length == 1) {
 				var = values[0];
 				values = (String[]) compiler.fetchRuntimeScope(var);
+				if ( values == null ) {
+					return compiler.resolveString(var);
+				}
+			} else {
+				for(int i=0; i<values.length; i++) {
+					values[i] = compiler.resolveString(values[i]);
+				}
 			}
-			int forindex = (Integer) compiler.retraceVariable("loop.index");
 			return values[forindex % values.length];
 		} else if (helper.length == 3) {
 			HelperStringTokenizer items = new HelperStringTokenizer(helper[0]);
 			items.splitComma(true);
 			values = items.allTokens();
+			for(int i=0; i<values.length; i++) {
+				values[i] = compiler.resolveString(values[i]);
+			}
 			var = helper[2];
 			compiler.assignRuntimeScope(var, values);
 			return "";

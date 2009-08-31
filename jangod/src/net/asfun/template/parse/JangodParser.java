@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
 
 import net.asfun.template.util.JangodLogger;
 
-public class JangodParser implements Iterator<Token>, Iterable<Token>{
+public class JangodParser implements Iterator<Token>{
 	
 	private TokenManager tm = new TokenManager();
 	private Token token;
@@ -47,7 +47,7 @@ public class JangodParser implements Iterator<Token>, Iterable<Token>{
 			} catch (ParserException e) {
 				JangodLogger.severe(e.getMessage(), e.getCause());
 				token = null;
-				//go on proceeding or not
+				//TODO go on proceeding or not
 			}
 		}	
 		return false;
@@ -81,10 +81,5 @@ public class JangodParser implements Iterator<Token>, Iterable<Token>{
 	@Override
 	public void remove() {
 		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Iterator<Token> iterator() {
-		return this;
 	}
 }

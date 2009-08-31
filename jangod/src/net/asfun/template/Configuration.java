@@ -49,7 +49,6 @@ public class Configuration {
 	}
 	
 	public void setEncoding(String encoding2) {
-		//TODO check encoding2 value;
 		encoding = encoding2;
 	}
 	

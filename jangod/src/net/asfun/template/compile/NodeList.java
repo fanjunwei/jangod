@@ -33,7 +33,7 @@ public class NodeList {
 					break;
 				case Token.TOKEN_INST :
 					try {
-						InstNode in = new InstNode((InstToken) token, level);
+						InstNode in = new InstNode((InstToken) token);
 						nodes.add(in);
 					} catch (CompilerException e) {
 						JangodLogger.warning("Can't create node with token >>> " + token,e.getCause());

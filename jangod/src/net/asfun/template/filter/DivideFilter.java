@@ -25,19 +25,19 @@ public class DivideFilter implements Filter{
 			return object;
 		}
 		if ( object instanceof Integer ) {
-			return num.intValue() / (Integer)object;
+			return (Integer)object / num.intValue();
 		}
 		if ( object instanceof Float ) {
-			return num.floatValue() / (Float)object;
+			return (Float)object / num.floatValue();
 		}
 		if ( object instanceof Long ) {
-			return num.longValue() / (Long)object;
+			return (Long)object / num.longValue();
 		}
 		if ( object instanceof Short ) {
-			return 0 + num.shortValue() / (Short)object;
+			return (Short)object / num.shortValue();
 		}
 		if ( object instanceof Double ) {
-			return num.doubleValue() / (Double)object;
+			return (Double)object / num.doubleValue();
 		}
 		if ( object instanceof BigDecimal ) {
 			return ((BigDecimal)object).divide(BigDecimal.valueOf(num.doubleValue()));
@@ -46,11 +46,11 @@ public class DivideFilter implements Filter{
 			return ((BigInteger)object).divide(BigInteger.valueOf(num.longValue()));
 		}
 		if ( object instanceof Byte ) {
-			return num.byteValue() / (Byte)object;
+			return (Byte)object / num.byteValue();
 		}
 		if ( object instanceof String ) {
 			try {
-				return num.doubleValue() / Double.valueOf(object.toString());
+				return Double.valueOf(object.toString()) / num.doubleValue();
 			} catch (Exception e) {
 				throw new CompilerException(object + " can't be dealed with multiply filter");
 			}

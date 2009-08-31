@@ -3,4 +3,4 @@
 {# if !(a or b) and c and d #}
 {% if a|or:b|not|and:c,d %}
 {# if (a or b ) and (c or d) #}
-{!set e == c|or:d !}{% if a|or:b|and:e %}
+{%set e == c|or:d %}{% if a|or:b|and:e %}

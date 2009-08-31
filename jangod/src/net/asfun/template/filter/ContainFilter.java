@@ -1,7 +1,6 @@
 package net.asfun.template.filter;
 
 import java.lang.reflect.Array;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -32,22 +31,10 @@ public class ContainFilter implements Filter{
 				argObj = arg[0];
 			}
 		}
-		//collection
-		if ( object instanceof Collection ) {
-			Iterator it = ((Collection)object).iterator();
-			Object item;
-			while(it.hasNext()) {
-				item = it.next();
-				if ( item == null ) {
-					if ( isNull ) {
-						return true;
-					}
-				}
-				else if ( ObjectStringEqual.evaluate(item, argObj) ) {
-					return true;
-				}
-			}
-			return false;
+		//iterable
+		if ( object instanceof Iterable ) {
+			Iterator it = ((Iterable)object).iterator();
+			return iteratorContain(it, isNull, argObj);
 		}
 		//array
 		if ( object.getClass().isArray() ) {
@@ -67,23 +54,15 @@ public class ContainFilter implements Filter{
 		//map
 		if( object instanceof Map ) {
 			Iterator it = ((Map)object).values().iterator();
-			Object item;
-			while(it.hasNext()) {
-				item = it.next();
-				if ( item == null ) {
-					if ( isNull ) {
-						return true;
-					}
-				}
-				else if ( ObjectStringEqual.evaluate(item, argObj) ) {
-					return true;
-				}
-			}
-			return false;
+			return iteratorContain(it, isNull, argObj);
 		}
 		//string
 		if ( object instanceof String ) {
 			return object.toString().contains(argObj.toString());
+		}
+		//iterator
+		if ( object instanceof Iterator ) {
+			return iteratorContain((Iterator)object, isNull, argObj);
 		}
 		throw new CompilerException("filter contain can't be applied to >>> " + object.getClass().getName());
 	}
@@ -91,6 +70,23 @@ public class ContainFilter implements Filter{
 	@Override
 	public String getName() {
 		return "contain";
+	}
+	
+	@SuppressWarnings("unchecked")
+	private boolean iteratorContain(Iterator it, boolean isNull, Object argObj) {
+		Object item;
+		while(it.hasNext()) {
+			item = it.next();
+			if ( item == null ) {
+				if ( isNull ) {
+					return true;
+				}
+			}
+			else if ( ObjectStringEqual.evaluate(item, argObj) ) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
