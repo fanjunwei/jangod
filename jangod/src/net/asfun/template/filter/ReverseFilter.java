@@ -6,6 +6,7 @@ import java.util.Collection;
 import net.asfun.template.compile.CompilerException;
 import net.asfun.template.compile.Filter;
 import net.asfun.template.compile.JangodCompiler;
+import net.asfun.template.util.JangodLogger;
 
 public class ReverseFilter implements Filter{
 
@@ -22,7 +23,7 @@ public class ReverseFilter implements Filter{
 			int length = origin.length;
 			Object[] res = new Object[length];
 			length--;
-			for(int i=0; i<length; i++) {
+			for(int i=0; i<=length; i++) {
 				res[i] = origin[length-i];
 			}
 			return res;
@@ -32,7 +33,7 @@ public class ReverseFilter implements Filter{
 			int length = Array.getLength(object);
 			Object[] res = new Object[length];
 			length--;
-			for(int i=0; i<length; i++) {
+			for(int i=0; i<=length; i++) {
 				res[i] = Array.get(object, length-i);
 			}
 			return res;
@@ -43,11 +44,12 @@ public class ReverseFilter implements Filter{
 			int length = origin.length();
 			char[] res = new char[length];
 			length--;
-			for(int i=0; i<length; i++) {
+			for(int i=0; i<=length; i++) {
 				res[i] = origin.charAt(length-i);
 			}
 			return String.valueOf(res);
 		}
+		JangodLogger.warning("filter contain can't be applied to >>> " + object.getClass().getName());
 		return object;
 	}
 

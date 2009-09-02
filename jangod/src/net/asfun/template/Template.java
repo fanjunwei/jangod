@@ -80,4 +80,28 @@ public class Template {
 	public void render(String tpl, Bindings engineBindings, String encoding, Writer out) throws TemplateException, IOException{
 		out.write(render(tpl, engineBindings, encoding));
 	}
+	
+	
+	public String render(String tpl) throws TemplateException{
+		return render(tpl, config.getEncoding());
+	}
+	
+	public String render(String tpl, String encoding) throws TemplateException {
+		ScriptEngine engine = factory.getScriptEngine();
+		try {
+			return (String) engine.eval(loader.getReader(tpl, encoding));
+		} catch (ScriptException e) {
+			throw new TemplateException(e.getMessage());
+		} catch (IOException e) {
+			throw new TemplateException(e.getMessage());
+		}
+	}
+	
+	public void render(String tpl, Writer out) throws TemplateException, IOException{
+		out.write(render(tpl));
+	}
+	
+	public void render(String tpl, String encoding, Writer out) throws TemplateException, IOException{
+		out.write(render(tpl, encoding));
+	}
 }

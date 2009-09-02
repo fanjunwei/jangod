@@ -50,7 +50,7 @@ public class LazyBindings implements Bindings{
 			Object value = bins.get(key);
 			if ( value == null ) {
 				value = getFromDataSource(key);
-				bins.put(key.toString(), value);
+//				bins.put(key.toString(), value);
 			}
 			return value;
 		}

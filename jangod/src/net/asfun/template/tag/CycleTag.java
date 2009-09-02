@@ -30,10 +30,13 @@ public class CycleTag implements Tag{
 			HelperStringTokenizer items = new HelperStringTokenizer(helper[0]);
 			items.splitComma(true);
 			values = items.allTokens();
-			int forindex = (Integer) compiler.retraceVariable("loop.index");
+			Integer forindex = (Integer) compiler.retraceVariable("loop.index");
+			if (forindex == null) {
+				forindex = 0;
+			}
 			if (values.length == 1) {
 				var = values[0];
-				values = (String[]) compiler.fetchRuntimeScope(var);
+				values = (String[]) compiler.retraceVariable(var);
 				if ( values == null ) {
 					return compiler.resolveString(var);
 				}
