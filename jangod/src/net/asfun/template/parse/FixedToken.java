@@ -15,6 +15,9 @@ public class FixedToken extends Token{
 	
 	/**
 	 * change "\{" and "\}" to "{" or "}"
+	 * TODO 更改特殊字符的替换, {\[n]{  ->  {\[n-1]{
+	 * change "{\{" and "{\!" and "{\#" and "{\%"
+	 * to     "{{"   or "{!"   or "{#"   or "{%"
 	 */
 	@Override
 	protected void parse() {
