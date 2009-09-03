@@ -1,14 +1,14 @@
 package net.asfun.template.parse;
 
-public interface ParserConstants {
+public final class ParserConstants {
 
-	int TOKEN_PREFIX = '{';
-	int TOKEN_POSTFIX = '}';
-	int TOKEN_FIXED = 0;
-	int TOKEN_NOTE = '#';
-	int TOKEN_TAG = '%';
-	int TOKEN_ECHO = '{';
-	int TOKEN_ECHO2 = '}';
-	int TOKEN_INST = '!';
+	public static final int TOKEN_PREFIX = '{';
+	public static final int TOKEN_POSTFIX = '}';
+	public static final int TOKEN_FIXED = 0;
+	public static final int TOKEN_NOTE = '#';
+	public static final int TOKEN_TAG = '%';
+	public static final int TOKEN_ECHO = '{';
+	public static final int TOKEN_ECHO2 = '}';
+	public static final int TOKEN_INST = '!';
 	
 }

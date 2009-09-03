@@ -1,6 +1,8 @@
 package net.asfun.template.parse;
 
-public class TokenManager implements ParserConstants{
+import static net.asfun.template.parse.ParserConstants.*;
+
+public class TokenManager{
 
 	private char[] is;
 	private int currPost = 0;
@@ -36,11 +38,18 @@ public class TokenManager implements ParserConstants{
 					case TOKEN_TAG :
 					case TOKEN_ECHO :
 					case TOKEN_NOTE :
+						tokenLength = currPost-tokenStart-1;
 						//match token two ends
 						if ( ! matchToken(c) && tokenKind > 0 ) {
-							continue;
+							if ( tokenLength > 1 ) {
+								lastStart = tokenStart;
+								tokenStart = --currPost;
+								tokenKind = c;
+								return newToken(TOKEN_FIXED);
+							} else {
+								continue;
+							}
 						}
-						tokenLength = currPost-tokenStart-1;
 						if ( tokenLength > 0 ) {
 							//start a new token
 							lastStart = tokenStart;

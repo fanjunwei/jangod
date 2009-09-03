@@ -5,8 +5,9 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.logging.Level;
 
-import net.asfun.template.util.JangodLogger;
+import static net.asfun.template.util.logger.JangodLogger;
 
 public class JangodParser implements Iterator<Token>{
 	
@@ -45,7 +46,7 @@ public class JangodParser implements Iterator<Token>{
 					return false;
 				}
 			} catch (ParserException e) {
-				JangodLogger.severe(e.getMessage(), e.getCause());
+				JangodLogger.log(Level.SEVERE, e.getMessage(), e.getCause());
 				token = null;
 				//TODO go on proceeding or not
 			}
@@ -65,7 +66,7 @@ public class JangodParser implements Iterator<Token>{
 					}
 					return tk;
 				} catch (ParserException e) {
-					JangodLogger.severe(e.getMessage(), e.getCause());
+					JangodLogger.log(Level.SEVERE, e.getMessage(), e.getCause());
 					//go on proceeding or not
 					throw new NoSuchElementException();
 				}

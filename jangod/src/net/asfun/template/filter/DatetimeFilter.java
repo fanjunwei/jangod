@@ -2,11 +2,12 @@ package net.asfun.template.filter;
 
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
+import java.util.logging.Level;
 
 import net.asfun.template.compile.CompilerException;
 import net.asfun.template.compile.Filter;
 import net.asfun.template.compile.JangodCompiler;
-import net.asfun.template.util.JangodLogger;
+import static net.asfun.template.util.logger.JangodLogger;
 
 public class DatetimeFilter implements Filter{
 
@@ -28,7 +29,7 @@ public class DatetimeFilter implements Filter{
 		try { 
 			return sdf.format(object);
 		} catch (Exception e) {
-			JangodLogger.severe("filter date can't format a datetime >>> " + object, e.getCause());
+			JangodLogger.log(Level.SEVERE, "filter date can't format a datetime >>> " + object, e.getCause());
 		}
 		return object;
 	}

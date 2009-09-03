@@ -6,11 +6,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 import javax.script.Bindings;
 import javax.script.ScriptException;
 
-import net.asfun.template.util.JangodLogger;
+import static net.asfun.template.util.logger.JangodLogger;
 
 public class LazyBindings implements Bindings{
 	
@@ -69,7 +70,7 @@ public class LazyBindings implements Bindings{
 			}
 			return methods.get(lazy).invoke(null, new Object[]{});
 		} catch (Exception e) {
-			JangodLogger.severe(e.getMessage(), e.getCause());
+			JangodLogger.log(Level.SEVERE, e.getMessage(), e.getCause());
 		} 
 		return null;
 	}

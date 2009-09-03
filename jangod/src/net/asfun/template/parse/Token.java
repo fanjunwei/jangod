@@ -1,8 +1,11 @@
 package net.asfun.template.parse;
 
-public abstract class Token implements ParserConstants{
+import static net.asfun.template.parse.ParserConstants.*;
+
+public abstract class Token{
 
 	protected String image;
+	//useful for some token type
 	protected String content;
 	
 	public Token(String image2) throws ParserException{

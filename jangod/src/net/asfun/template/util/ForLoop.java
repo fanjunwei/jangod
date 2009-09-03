@@ -1,7 +1,7 @@
 package net.asfun.template.util;
 
 import java.util.Iterator;
-
+import static net.asfun.template.util.logger.JangodLogger;
 
 @SuppressWarnings("unchecked")
 public class ForLoop implements Iterator{

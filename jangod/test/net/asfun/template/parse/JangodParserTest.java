@@ -1,0 +1,144 @@
+package net.asfun.template.parse;
+
+import static net.asfun.template.parse.ParserConstants.*;
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+
+
+public class JangodParserTest {
+
+	JangodParser parser;
+	String script;
+	
+	@Test
+	public void test1() throws ParserException {
+		script = "{{abc.b}}{% if x %}{\\{abc}}{%endif%}";
+		parser = new JangodParser(script);
+		assertEquals("{{abc.b}}", parser.next().image);
+		assertEquals("if x", parser.next().content);
+		assertEquals("{{abc}}", parser.next().content);
+		assertEquals("{%endif%}", parser.next().image);
+	}
+	
+	@Test
+	public void test2() throws ParserException {
+		script = "{{abc.b}}{% if x %}{{abc}\\}{%endif%}";
+		parser = new JangodParser(script);
+		assertEquals("{{abc.b}}", parser.next().image);
+		assertEquals("if x", parser.next().content);
+		assertEquals("{{abc}}", parser.next().content);
+		assertEquals("{%endif%}", parser.next().image);
+	}
+	
+	@Test
+	public void test3() throws ParserException {
+		script = "{{abc.b}}{% if x %}{{{abc}}{%endif%}";
+		parser = new JangodParser(script);
+		assertEquals("{{abc.b}}", parser.next().image);
+		assertEquals("if x", parser.next().content);
+		Token tk = parser.next();
+		assertEquals("{{{abc}}", tk.image);
+		assertEquals(TOKEN_ECHO, tk.getType());
+		assertEquals("{%endif%}", parser.next().image);
+	}
+	
+	@Test
+	public void test4() throws ParserException {
+		script = "{{abc.b}}{% if x %}{{#abc}}{%endif%}";
+		parser = new JangodParser(script);
+		assertEquals("{{abc.b}}", parser.next().image);
+		assertEquals("if x", parser.next().content);
+		Token tk = parser.next();
+		assertEquals("{{#abc}}", tk.image);
+		assertEquals(TOKEN_ECHO, tk.getType());
+		assertEquals("{%endif%}", parser.next().image);
+	}
+	
+	@Test
+	public void test5() throws ParserException {
+		script = "{{abc.b}}{% if x %}a{{abc}\\}{%endif%}";
+		parser = new JangodParser(script);
+		assertEquals("{{abc.b}}", parser.next().image);
+		assertEquals("if x", parser.next().content);
+		assertEquals("a", parser.next().content);
+		assertEquals("{{abc}}", parser.next().content);
+		assertEquals("{%endif%}", parser.next().image);
+	}
+	
+	@Test
+	public void test6() throws ParserException {
+		script = "a{{abc.b}}{% if x 	%}a{{abc}\\}{%endif%}";
+		parser = new JangodParser(script);
+		assertEquals("a", parser.next().image);
+		assertEquals("{{abc.b}}", parser.next().image);
+		assertEquals("if x", parser.next().content);
+		assertEquals("a", parser.next().content);
+		assertEquals(TOKEN_FIXED, parser.next().getType());
+		assertEquals("{%endif%}", parser.next().image);
+	}
+	
+	@Test
+	public void test7() throws ParserException {
+		script = "a{{abc.b}}{% if x 	%}a{{abc}\\}{%endif";
+		parser = new JangodParser(script);
+		assertEquals("a", parser.next().image);
+		assertEquals("{{abc.b}}", parser.next().image);
+		assertEquals("if x", parser.next().content);
+		assertEquals("a", parser.next().content);
+		assertEquals(TOKEN_FIXED, parser.next().getType());
+		assertEquals("{%endif", parser.next().content);
+	}
+	
+	@Test
+	public void test8() throws ParserException {
+		script = "a{{abc.b}}{% if x 	%}a{{abc}\\}{%endif{{";
+		parser = new JangodParser(script);
+		assertEquals("a", parser.next().image);
+		assertEquals("{{abc.b}}", parser.next().image);
+		assertEquals("if x", parser.next().content);
+		assertEquals("a", parser.next().content);
+		assertEquals(TOKEN_FIXED, parser.next().getType());
+		assertEquals("{%endif", parser.next().content);
+		assertEquals("{{", parser.next().content);
+	}
+	
+	@Test
+	public void test9() throws ParserException {
+		script = "a{{abc.b}}{% if x 	%}a{{abc}\\}{%endif{";
+		parser = new JangodParser(script);
+		assertEquals("a", parser.next().image);
+		assertEquals("{{abc.b}}", parser.next().image);
+		assertEquals("if x", parser.next().content);
+		assertEquals("a", parser.next().content);
+		assertEquals(TOKEN_FIXED, parser.next().getType());
+		assertEquals("{%endif{", parser.next().content);
+	}
+	
+	@Test
+	public void test10() throws ParserException {
+		script = "a{{abc.b}}{% if x %}a{{abc}\\}{{{#endif{";
+		parser = new JangodParser(script);
+		assertEquals("a", parser.next().image);
+		assertEquals("{{abc.b}}", parser.next().image);
+		assertEquals("if x", parser.next().content);
+		assertEquals("a", parser.next().content);
+		assertEquals("{{abc}}", parser.next().content);
+		assertEquals("{{", parser.next().content);
+		assertEquals("{#endif{", parser.next().content);
+	}
+	
+	@Test
+	public void test11() throws ParserException {
+		script = "a{#abc.b#}{% if x %}a{{abc}\\}{{{{#endif{";
+		parser = new JangodParser(script);
+		assertEquals("a", parser.next().image);
+		assertEquals("{#abc.b#}", parser.next().image);
+		assertEquals("if x", parser.next().content);
+		assertEquals("a", parser.next().content);
+		assertEquals("{{abc}}", parser.next().content);
+		assertEquals("{{", parser.next().content);
+		assertEquals("{{#endif{", parser.next().content);
+	}
+}

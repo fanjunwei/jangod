@@ -1,5 +1,7 @@
 package net.asfun.template.parse;
 
+import static net.asfun.template.parse.ParserConstants.*;
+
 public class TagToken extends Token {
 	
 	private String tagName;

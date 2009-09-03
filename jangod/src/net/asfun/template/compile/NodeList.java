@@ -1,14 +1,17 @@
 package net.asfun.template.compile;
 
+import static net.asfun.template.parse.ParserConstants.*;
+import static net.asfun.template.util.logger.JangodLogger;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import net.asfun.template.parse.EchoToken;
 import net.asfun.template.parse.InstToken;
 import net.asfun.template.parse.JangodParser;
 import net.asfun.template.parse.TagToken;
 import net.asfun.template.parse.Token;
-import net.asfun.template.util.JangodLogger;
 
 public class NodeList {
 	
@@ -26,24 +29,24 @@ public class NodeList {
 		while( parser.hasNext() ) {
 			token = parser.next();
 			switch(token.getType()) {
-				case Token.TOKEN_FIXED :
-				case Token.TOKEN_NOTE :		
+				case TOKEN_FIXED :
+				case TOKEN_NOTE :		
 					TextNode xn = new TextNode(token);
 					nodes.add(xn);
 					break;
-				case Token.TOKEN_INST :
+				case TOKEN_INST :
 					try {
 						InstNode in = new InstNode((InstToken) token);
 						nodes.add(in);
 					} catch (CompilerException e) {
-						JangodLogger.warning("Can't create node with token >>> " + token,e.getCause());
+						JangodLogger.log(Level.WARNING, "Can't create node with token >>> " + token, e.getCause());
 					}	
 					break;
-				case Token.TOKEN_ECHO :
+				case TOKEN_ECHO :
 					VariableNode vn = new VariableNode((EchoToken) token, level);
 					nodes.add(vn);
 					break;
-				case Token.TOKEN_TAG :
+				case TOKEN_TAG :
 					tag = (TagToken) token;
 					if ( tag.getTagName().equals(endTagName) ) {
 						return nodes;
@@ -52,7 +55,7 @@ public class NodeList {
 						TagNode tn = new TagNode((TagToken) token, parser, level);
 						nodes.add(tn);
 					} catch (CompilerException e) {
-						JangodLogger.warning("Can't create node with token >>> " + token,e.getCause());
+						JangodLogger.log(Level.WARNING, "Can't create node with token >>> " + token,e.getCause());
 					}
 					break;
 				default :

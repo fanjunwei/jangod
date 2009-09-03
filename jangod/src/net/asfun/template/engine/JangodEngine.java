@@ -1,6 +1,7 @@
 package net.asfun.template.engine;
 
 import java.io.Reader;
+import java.util.logging.Level;
 
 import javax.script.Bindings;
 import javax.script.ScriptContext;
@@ -13,7 +14,7 @@ import net.asfun.template.compile.CompilerException;
 import net.asfun.template.compile.JangodCompiler;
 import net.asfun.template.parse.JangodParser;
 import net.asfun.template.parse.ParserException;
-import net.asfun.template.util.JangodLogger;
+import static net.asfun.template.util.logger.JangodLogger;
 
 public class JangodEngine implements ScriptEngine {
 	
@@ -42,13 +43,13 @@ public class JangodEngine implements ScriptEngine {
 		try {
 			return (Bindings) Class.forName(defaultBindings).newInstance();
 		} catch (InstantiationException e) {
-			JangodLogger.severe(e.getMessage(), e.getCause());
+			JangodLogger.log(Level.SEVERE, e.getMessage(), e.getCause());
 		} catch (IllegalAccessException e) {
-			JangodLogger.severe(e.getMessage(), e.getCause());
+			JangodLogger.log(Level.SEVERE, e.getMessage(), e.getCause());
 		} catch (ClassNotFoundException e) {
-			JangodLogger.severe(e.getMessage(), e.getCause());
+			JangodLogger.log(Level.SEVERE, e.getMessage(), e.getCause());
 		} catch (Exception e) {
-			JangodLogger.severe(e.getMessage(), e.getCause());
+			JangodLogger.log(Level.SEVERE, e.getMessage(), e.getCause());
 		}
 		return new SimpleBindings();
 	}

@@ -1,5 +1,6 @@
 package net.asfun.template.parse;
 
+import static net.asfun.template.parse.ParserConstants.*;
 import java.util.List;
 
 public class EchoToken extends Token {

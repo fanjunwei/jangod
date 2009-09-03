@@ -1,5 +1,6 @@
 package net.asfun.template.util;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -8,7 +9,7 @@ import java.util.Iterator;
  * @author fangchq
  *
  */
-public class HelperStringTokenizer implements Iterator<String>, Iterable<String>{
+public class HelperStringTokenizer implements Iterator<String>{
 
 	private char[] helpers;
 	private int currPost = 0;
@@ -123,20 +124,12 @@ public class HelperStringTokenizer implements Iterator<String>, Iterable<String>
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}
-
-	@Override
-	public Iterator<String> iterator() {
-		return this;
-	}
 	
 	public String[] allTokens() {
-		String[] res = new String[30];
-		int i = 0;
-		for (String token: this) {
-			res[i++] = token;
+		ArrayList<String> al = new ArrayList<String>();
+		while( hasNext() ) {
+			al.add(next());
 		}
-		String[] tokens = new String[i];
-		System.arraycopy(res, 0, tokens, 0, i);
-		return tokens;
+		return al.toArray(new String[]{});
 	}
 }

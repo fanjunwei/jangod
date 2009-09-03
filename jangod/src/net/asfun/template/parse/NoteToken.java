@@ -1,5 +1,7 @@
 package net.asfun.template.parse;
 
+import static net.asfun.template.parse.ParserConstants.*;
+
 public class NoteToken extends Token {
 
 	public NoteToken(String image) throws ParserException{

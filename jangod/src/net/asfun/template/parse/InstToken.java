@@ -1,5 +1,7 @@
 package net.asfun.template.parse;
 
+import static net.asfun.template.parse.ParserConstants.*;
+
 /**
  * Do something hard to be done by TagToken
  * @author fangchq<anysome@com.gmail>

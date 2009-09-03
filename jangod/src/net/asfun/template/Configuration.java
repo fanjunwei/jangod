@@ -10,7 +10,7 @@ import net.asfun.template.compile.Instruction;
 import net.asfun.template.compile.InstructionLibrary;
 import net.asfun.template.compile.Tag;
 import net.asfun.template.compile.TagLibrary;
-import net.asfun.template.util.JangodLogger;
+import static net.asfun.template.util.logger.JangodLogger;
 
 public class Configuration {
 	
@@ -27,24 +27,20 @@ public class Configuration {
 		defaultConfig = new Configuration();
 	}
 
-	public static void addImport(Class<Importable> clazz) {
-		try {
-			if (clazz.isAssignableFrom(Tag.class)) {
-				Tag tag = (Tag) clazz.newInstance();
-				TagLibrary.addTag(tag);
-			}
-			if (clazz.isAssignableFrom(Filter.class)) {
-				Filter filter = (Filter) clazz.newInstance();
-				FilterLibrary.addFilter(filter);
-			}
-			if (clazz.isAssignableFrom(Instruction.class)) {
-				Instruction inst = (Instruction) clazz.newInstance();
-				InstructionLibrary.addInstruction(inst);
-			}
-		} catch (InstantiationException e) {
-			JangodLogger.warning("Import library error >>> " + clazz.getName(), e.getCause());
-		} catch (IllegalAccessException e) {
-			JangodLogger.warning("Import library error >>> " + clazz.getName(), e.getCause());
+	public static void addImport(Importable importee) {
+		if ( importee instanceof Filter) {
+			FilterLibrary.addFilter((Filter)importee);
+		}
+		else if ( importee instanceof Tag) {
+			TagLibrary.addTag((Tag)importee);
+		}
+		else if ( importee instanceof Instruction ) {
+			InstructionLibrary.addInstruction((Instruction)importee);
+		} else {
+			if ( importee != null )
+				JangodLogger.warning("Can't recognize the importing object >>> " + importee.getClass().getName());
+			else 
+				JangodLogger.warning("Can't import null object");
 		}
 	}
 	

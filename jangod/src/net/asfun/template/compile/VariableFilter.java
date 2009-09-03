@@ -4,7 +4,8 @@ import java.util.List;
 
 import net.asfun.template.parse.FilterParser;
 import net.asfun.template.parse.ParserException;
-import net.asfun.template.util.JangodLogger;
+
+import static net.asfun.template.util.logger.JangodLogger;
 
 public class VariableFilter {
 	

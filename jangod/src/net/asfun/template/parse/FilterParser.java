@@ -99,7 +99,7 @@ public class FilterParser {
 //			int post = argString.indexOf('"');
 			int post = argString.substring(1).indexOf('"');
 			if ( post < 0 ) {
-				throw new ParserException("filter argument doesn't match quotes");
+				throw new ParserException("filter argument doesn't match quotes >>> " + getVariable());
 			} else {
 				//change to save quote in arg
 //				args.add(argString.substring(0,post));
@@ -116,7 +116,7 @@ public class FilterParser {
 						return argString.substring(1).trim();
 					}
 					else {
-						throw new ParserException("filter argument(s) is illegal");
+						throw new ParserException("filter argument is illegal >>> " + getVariable());
 					}
 				}
 			}
@@ -127,7 +127,7 @@ public class FilterParser {
 //			int post = argString.indexOf('\'');
 			int post = argString.substring(1).indexOf('\'');
 			if ( post < 0 ) {
-				throw new ParserException("filter argument doesn't match quotes");
+				throw new ParserException("filter argument doesn't match quotes >>> " + getVariable());
 			} else {
 				//change to save quote in arg
 //				args.add(argString.substring(0,post));
@@ -144,7 +144,7 @@ public class FilterParser {
 						return argString.substring(1).trim();
 					}
 					else {
-						throw new ParserException("filter argument(s) is illegal");
+						throw new ParserException("filter argument is illegal >>> " + getVariable());
 					}
 				}
 			}
@@ -158,13 +158,18 @@ public class FilterParser {
 					return argString.substring(postComma+1).trim();
 				}
 			}
-			if ( postPipe > 0 && ( postPipe < postComma || postComma < 0)) {
-				args.add(argString.substring(0,postPipe).trim());
+			if ( postPipe >= 0 && ( postPipe < postComma || postComma < 0)) {
+				if ( postPipe > 0 ) {
+					args.add(argString.substring(0,postPipe).trim());
+				}
 				if( postPipe < argString.length() - 1) {
 					//RETURN NULL start a new filter parse
 					content = argString.substring(postPipe+1).trim();
 					return null;
 				}
+			}
+			if ( postComma == 0 ) {
+				throw new ParserException("filter lost some argument >>> " + getVariable());
 			}
 			if ( postComma == postPipe ) {
 				args.add(argString);

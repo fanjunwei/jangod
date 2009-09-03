@@ -1,5 +1,7 @@
 package net.asfun.template.parse;
 
+import static net.asfun.template.parse.ParserConstants.*;
+
 public class FixedToken extends Token{
 
 	public FixedToken(String image) throws ParserException{
@@ -16,7 +18,7 @@ public class FixedToken extends Token{
 	 */
 	@Override
 	protected void parse() {
-		content = image.replaceAll("\\{", "{").replaceAll("\\}", "}");
+		content = image.replaceAll("\\\\\\{", "{").replaceAll("\\\\\\}", "}");;
 	}
 
 	public boolean isBlank() {
