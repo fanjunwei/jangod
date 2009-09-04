@@ -7,6 +7,11 @@ import net.asfun.template.compile.JangodCompiler;
 import net.asfun.template.compile.Node;
 import net.asfun.template.compile.Tag;
 
+/**
+ * {% else %}
+ * @author anysome
+ *
+ */
 public class ElseTag implements Tag{
 
 	@Override

@@ -3,7 +3,7 @@ package net.asfun.template.filter;
 import net.asfun.template.compile.CompilerException;
 import net.asfun.template.compile.Filter;
 import net.asfun.template.compile.JangodCompiler;
-import static net.asfun.template.util.logger.JangodLogger;
+import static net.asfun.template.util.logging.JangodLogger;
 
 public class TruncateFilter implements Filter{
 

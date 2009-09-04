@@ -10,7 +10,7 @@ import net.asfun.template.compile.Instruction;
 import net.asfun.template.compile.InstructionLibrary;
 import net.asfun.template.compile.Tag;
 import net.asfun.template.compile.TagLibrary;
-import static net.asfun.template.util.logger.JangodLogger;
+import static net.asfun.template.util.logging.JangodLogger;
 
 public class Configuration {
 	

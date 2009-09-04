@@ -3,7 +3,7 @@ package net.asfun.template.compile;
 import java.util.List;
 
 import net.asfun.template.parse.EchoToken;
-import static net.asfun.template.util.logger.JangodLogger;
+import static net.asfun.template.util.logging.JangodLogger;
 import net.asfun.template.util.ObjectValue;
 
 public class VariableNode implements Node{

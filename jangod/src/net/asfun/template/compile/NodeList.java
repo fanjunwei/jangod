@@ -1,11 +1,10 @@
 package net.asfun.template.compile;
 
 import static net.asfun.template.parse.ParserConstants.*;
-import static net.asfun.template.util.logger.JangodLogger;
+import static net.asfun.template.util.logging.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 import net.asfun.template.parse.EchoToken;
 import net.asfun.template.parse.InstToken;

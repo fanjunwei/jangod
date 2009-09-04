@@ -1,7 +1,6 @@
 package net.asfun.template.engine;
 
 import java.io.Reader;
-import java.util.logging.Level;
 
 import javax.script.Bindings;
 import javax.script.ScriptContext;
@@ -14,7 +13,7 @@ import net.asfun.template.compile.CompilerException;
 import net.asfun.template.compile.JangodCompiler;
 import net.asfun.template.parse.JangodParser;
 import net.asfun.template.parse.ParserException;
-import static net.asfun.template.util.logger.JangodLogger;
+import static net.asfun.template.util.logging.*;
 
 public class JangodEngine implements ScriptEngine {
 	

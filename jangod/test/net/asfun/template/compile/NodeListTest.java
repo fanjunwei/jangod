@@ -96,10 +96,9 @@ public class NodeListTest {
 	
 	@Test
 	public void test10() throws CompilerException {
-		//TODO 允许注释jangod的代码，也要允许输出{#
 		script = "{%extends a %}都督府{{ab}}{#dlff{{dkf}}j#}";
 		parser = new JangodParser(script);
 		List<Node> nodes = NodeList.makeList(parser, null, 1);
-		assertEquals(6, nodes.size());
+		assertEquals(4, nodes.size());
 	}
 }

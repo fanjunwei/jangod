@@ -6,12 +6,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 
 import javax.script.Bindings;
 import javax.script.ScriptException;
 
-import static net.asfun.template.util.logger.JangodLogger;
+import static net.asfun.template.util.logging.*;
 
 public class LazyBindings implements Bindings{
 	

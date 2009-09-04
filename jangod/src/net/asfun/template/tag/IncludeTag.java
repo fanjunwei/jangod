@@ -12,6 +12,12 @@ import net.asfun.template.parse.ParserException;
 import net.asfun.template.util.HelperStringTokenizer;
 import net.asfun.template.util.TemplateLoader;
 
+/**
+ * {% include 'sidebar.html' %}
+ * {% include var_fileName %}
+ * @author anysome
+ *
+ */
 public class IncludeTag implements Tag{
 	
 	@Override

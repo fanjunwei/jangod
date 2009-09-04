@@ -10,9 +10,9 @@ import net.asfun.template.util.HelperStringTokenizer;
 
 /**
  * {% cycle a,b,c %}   
- * {% cycle a,b,c as d %} 
+ * {% cycle a,'b',c as d %} 
  * {% cycle d %}
- * @author fangchq
+ * @author anysome
  *
  */
 public class CycleTag implements Tag{

@@ -14,14 +14,13 @@ public class FixedToken extends Token{
 	}
 	
 	/**
-	 * change "\{" and "\}" to "{" or "}"
-	 * TODO 更改特殊字符的替换, {\[n]{  ->  {\[n-1]{
-	 * change "{\{" and "{\!" and "{\#" and "{\%"
-	 * to     "{{"   or "{!"   or "{#"   or "{%"
+	 * set n is an integer and > 0
+	 * change "{\[n]{" and "{\[n]!" and "{\[n]#" and "{\[n]%"
+	 * to     "{\[n-1]{"   or "{\[n-1]!"   or "{\[n-1]#"   or "{\[n-1]%"
 	 */
 	@Override
 	protected void parse() {
-		content = image.replaceAll("\\\\\\{", "{").replaceAll("\\\\\\}", "}");;
+		content = image.replaceAll("\\{\\\\(\\\\*[\\{!#%])","{$1");
 	}
 
 	public boolean isBlank() {

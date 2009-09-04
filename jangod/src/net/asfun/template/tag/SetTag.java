@@ -10,8 +10,8 @@ import net.asfun.template.compile.VariableFilter;
 import net.asfun.template.util.HelperStringTokenizer;
 
 /**
- * {% set var post.id|equal:'12' %}
- * @author fangchq
+ * {% set varName post.id|equal:'12' %}
+ * @author anysome
  *
  */
 public class SetTag implements Tag{

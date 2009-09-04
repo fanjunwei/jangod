@@ -12,8 +12,8 @@ import net.asfun.template.util.ObjectIterator;
 import net.asfun.template.compile.Node;
 
 /**
- * {% for a in b %}	
- * @author fangchq
+ * {% for a in b|f1:d,c %}	
+ * @author anysome
  *
  */
 public class ForTag implements Tag {

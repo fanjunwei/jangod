@@ -5,9 +5,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.logging.Level;
 
-import static net.asfun.template.util.logger.JangodLogger;
+import static net.asfun.template.util.logging.*;
 
 public class JangodParser implements Iterator<Token>{
 	

@@ -7,7 +7,7 @@ import javax.script.ScriptContext;
 import org.apache.commons.collections.MapIterator;
 import org.apache.commons.collections.map.ListOrderedMap;
 
-import static net.asfun.template.util.logger.JangodLogger;
+import static net.asfun.template.util.logging.JangodLogger;
 import net.asfun.template.Configuration;
 import net.asfun.template.bin.FloorBindings;
 import net.asfun.template.parse.JangodParser;

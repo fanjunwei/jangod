@@ -14,6 +14,12 @@ import net.asfun.template.parse.ParserException;
 import net.asfun.template.util.HelperStringTokenizer;
 import net.asfun.template.util.TemplateLoader;
 
+/**
+ * {% extends "base.html" %}
+ * {% extends var_fileName %}
+ * @author anysome
+ *
+ */
 public class ExtendsTag implements Tag{
 
 

@@ -11,10 +11,7 @@ import net.asfun.template.compile.VariableFilter;
 import net.asfun.template.util.ObjectTruthValue;
 
 /**
- * {% if a %}
- * {% if a and b and c %}
- * {% if c or d or a %}
- * {% if not a and b and not c and d %}
+ * {% if a|f1:b,c|f2 %}
  * @author fangchq
  *
  */
@@ -24,8 +21,6 @@ public class IfTag implements Tag {
 	@Override
 	public String compile(List<Node> carries, String helpers, JangodCompiler compiler)
 			throws CompilerException {
-//		String var = helpers;
-//		Object test = compiler.resolveVariable(var);
 		Object test = VariableFilter.compute(helpers, compiler);
 		StringBuffer sb = new StringBuffer();
 		if ( ObjectTruthValue.evaluate(test) ) {

@@ -11,6 +11,12 @@ import net.asfun.template.compile.Node;
 import net.asfun.template.compile.Tag;
 //import net.asfun.template.util.HelperStringTokenizer;
 
+/**
+ * {% block name %}
+ * @author anysome
+ *
+ */
+
 public class BlockTag implements Tag{
 	
 	private static final String BLOCKNAMES = "'BLK\"NAMES";

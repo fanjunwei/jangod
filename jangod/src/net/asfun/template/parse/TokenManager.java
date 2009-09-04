@@ -11,6 +11,7 @@ public class TokenManager{
 	private int tokenKind = -1;
 	private int length = 0;
 	private int lastStart = 0;
+	private int inComment = 0;
 	
 	public void init(String inputstream) {
 		is = inputstream.toCharArray();
@@ -19,6 +20,7 @@ public class TokenManager{
 		tokenStart = 0;
 		tokenKind = -1;
 		lastStart = 0;
+		inComment = 0;
 	}
 	
 	public Token getNextToken() throws ParserException {
@@ -34,29 +36,39 @@ public class TokenManager{
 				if ( currPost < length ) {
 					c = is[currPost];
 					switch( c ) {
-					case TOKEN_INST :
-					case TOKEN_TAG :
-					case TOKEN_ECHO :
 					case TOKEN_NOTE :
-						tokenLength = currPost-tokenStart-1;
-						//match token two ends
-						if ( ! matchToken(c) && tokenKind > 0 ) {
-							if ( tokenLength > 1 ) {
-								lastStart = tokenStart;
-								tokenStart = --currPost;
-								tokenKind = c;
-								return newToken(TOKEN_FIXED);
-							} else {
-								continue;
-							}
+						if ( inComment++ > 0 ) {
+							continue;
 						}
+						tokenLength = currPost-tokenStart-1;
 						if ( tokenLength > 0 ) {
 							//start a new token
 							lastStart = tokenStart;
 							tokenStart = --currPost;
-							int kind = tokenKind;
 							tokenKind = c;
-							return newToken(kind);
+							inComment--;
+							return newToken(TOKEN_FIXED);
+						} else {
+							tokenKind = c;
+						}
+						break;
+					case TOKEN_INST :
+					case TOKEN_TAG :
+					case TOKEN_ECHO :
+						if ( inComment > 0 ) {
+							continue;
+						}
+						//match token two ends
+						if ( ! matchToken(c) && tokenKind > 0 ) {
+								continue;
+						}
+						tokenLength = currPost-tokenStart-1;
+						if ( tokenLength > 0 ) {
+							//start a new token
+							lastStart = tokenStart;
+							tokenStart = --currPost;
+							tokenKind = c;
+							return newToken(TOKEN_FIXED);
 						} else {
 							tokenKind = c;
 						}
@@ -74,8 +86,10 @@ public class TokenManager{
 			case TOKEN_INST :
 			case TOKEN_TAG :
 			case TOKEN_ECHO2 :
-			case TOKEN_NOTE :
 				//match token two ends
+				if ( inComment > 0 ) {
+					continue;
+				}
 				if ( ! matchToken(c) ) {
 					continue;
 				}
@@ -96,6 +110,29 @@ public class TokenManager{
 					return getEndToken();
 				}
 				break;
+			case TOKEN_NOTE :
+				if ( ! matchToken(c) ) {
+					continue;
+				}
+				if ( currPost < length ) {
+					c = is[currPost];
+					if ( c == TOKEN_POSTFIX ) {
+						if ( --inComment > 0 ) {
+							continue;
+						}
+						tokenLength = currPost-tokenStart+1;
+						if ( tokenLength > 0 ) {
+							//start a new token
+							lastStart = tokenStart;
+							tokenStart = ++currPost;
+							tokenKind = TOKEN_FIXED;
+							return newToken(TOKEN_NOTE);
+						}
+					}
+				} else {
+					return getEndToken();
+				}
+				break;
 			default:
 				if (tokenKind == -1) {
 					tokenKind = TOKEN_FIXED;
@@ -107,7 +144,11 @@ public class TokenManager{
 	
 	private Token getEndToken() throws ParserException {
 		tokenLength = currPost-tokenStart;
-		return Token.newToken(TOKEN_FIXED, String.valueOf(is, tokenStart, tokenLength));
+		int type = TOKEN_FIXED;
+		if ( inComment > 0 ) {
+			type = TOKEN_NOTE;
+		}
+		return Token.newToken(type, String.valueOf(is, tokenStart, tokenLength));
 	}
 	
 	private Token newToken(int kind) throws ParserException {

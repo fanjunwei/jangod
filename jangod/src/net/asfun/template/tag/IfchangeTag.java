@@ -7,6 +7,11 @@ import net.asfun.template.compile.JangodCompiler;
 import net.asfun.template.compile.Node;
 import net.asfun.template.compile.Tag;
 
+/**
+ * {% ifchange var %}
+ * @author anysome
+ *
+ */
 public class IfchangeTag implements Tag{
 	
 	private static final String LASTKEY = "'IF\"CHG";
@@ -16,8 +21,8 @@ public class IfchangeTag implements Tag{
 	public String compile(List<Node> carries, String helpers, JangodCompiler compiler)
 			throws CompilerException {
 		boolean isChange = true;
-		Object older = compiler.fetchRuntimeScope(LASTKEY);
 		String var = helpers;
+		Object older = compiler.fetchRuntimeScope(LASTKEY + var);
 		Object test = compiler.retraceVariable(var);
 		if ( older == null ) {
 			if ( test == null ) {
@@ -26,7 +31,7 @@ public class IfchangeTag implements Tag{
 		} else if ( older.equals(test) ) {
 			isChange = false;
 		}
-		compiler.assignRuntimeScope(LASTKEY, test);
+		compiler.assignRuntimeScope(LASTKEY + var, test);
 		if ( isChange ) {
 			StringBuffer sb = new StringBuffer();
 			for(Node node : carries) {
