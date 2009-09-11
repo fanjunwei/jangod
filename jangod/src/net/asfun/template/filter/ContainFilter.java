@@ -1,3 +1,18 @@
+/**********************************************************************
+Copyright (c) 2009 Asfun Net.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+**********************************************************************/
 package net.asfun.template.filter;
 
 import java.lang.reflect.Array;
@@ -11,7 +26,6 @@ import net.asfun.template.util.ObjectStringEqual;
 
 public class ContainFilter implements Filter{
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Object filter(Object object, JangodCompiler compiler, String... arg)
 			throws CompilerException {
@@ -33,7 +47,7 @@ public class ContainFilter implements Filter{
 		}
 		//iterable
 		if ( object instanceof Iterable ) {
-			Iterator it = ((Iterable)object).iterator();
+			Iterator<?> it = ((Iterable<?>)object).iterator();
 			return iteratorContain(it, isNull, argObj);
 		}
 		//array
@@ -53,7 +67,7 @@ public class ContainFilter implements Filter{
 		}
 		//map
 		if( object instanceof Map ) {
-			Iterator it = ((Map)object).values().iterator();
+			Iterator<?> it = ((Map<?,?>)object).values().iterator();
 			return iteratorContain(it, isNull, argObj);
 		}
 		//string
@@ -62,7 +76,7 @@ public class ContainFilter implements Filter{
 		}
 		//iterator
 		if ( object instanceof Iterator ) {
-			return iteratorContain((Iterator)object, isNull, argObj);
+			return iteratorContain((Iterator<?>)object, isNull, argObj);
 		}
 		throw new CompilerException("filter contain can't be applied to >>> " + object.getClass().getName());
 	}
@@ -72,8 +86,7 @@ public class ContainFilter implements Filter{
 		return "contain";
 	}
 	
-	@SuppressWarnings("unchecked")
-	private boolean iteratorContain(Iterator it, boolean isNull, Object argObj) {
+	private boolean iteratorContain(Iterator<?> it, boolean isNull, Object argObj) {
 		Object item;
 		while(it.hasNext()) {
 			item = it.next();
