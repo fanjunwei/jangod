@@ -3,8 +3,6 @@ package net.asfun.template.tag;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.commons.collections.map.ListOrderedMap;
-
 import net.asfun.template.compile.CompilerException;
 import net.asfun.template.compile.JangodCompiler;
 import net.asfun.template.compile.Node;
@@ -12,6 +10,7 @@ import net.asfun.template.compile.Tag;
 import net.asfun.template.parse.JangodParser;
 import net.asfun.template.parse.ParserException;
 import net.asfun.template.util.HelperStringTokenizer;
+import net.asfun.template.util.ListOrderedMap;
 import net.asfun.template.util.TemplateLoader;
 
 /**

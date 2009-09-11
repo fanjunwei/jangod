@@ -28,31 +28,31 @@ public class AndFilterTest extends ZzzBase{
 	
 	@Test
 	public void test1() throws CompilerException {
-		Boolean res = (Boolean) filter.filter(1, compiler, new String[]{});
+		Boolean res = (Boolean) filter.filter(1, compiler);
 		assertEquals(true, res);
 	}
 	
 	@Test
 	public void test2() throws CompilerException {
-		Boolean res = (Boolean) filter.filter(12, compiler, new String[]{"var1", "var3"});
+		Boolean res = (Boolean) filter.filter(12, compiler, "var1", "var3");
 		assertEquals(false, res);
 	}
 	
 	@Test
 	public void test3() throws CompilerException {
-		Boolean res = (Boolean) filter.filter(-78, compiler, new String[]{"var1", "var4"});
+		Boolean res = (Boolean) filter.filter(-78, compiler, "var1", "var4");
 		assertEquals(false, res);
 	}
 	
 	@Test
 	public void test4() throws CompilerException {
-		Boolean res = (Boolean) filter.filter(-56l, compiler, new String[]{"var5", "var9"});
+		Boolean res = (Boolean) filter.filter(-56l, compiler, "var5", "var9");
 		assertEquals(false, res);
 	}
 	
 	@Test
 	public void test5() throws CompilerException {
-		Boolean res = (Boolean) filter.filter(-0l, compiler, new String[]{"var8", "var9"});
+		Boolean res = (Boolean) filter.filter(-0l, compiler, "var8", "var9");
 		assertEquals(false, res);
 	}
 	

@@ -2,155 +2,122 @@ package net.asfun.template.util;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
+//import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+//import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.beanutils.PropertyUtils;
+import static net.asfun.template.util.logging.*;
 
 public class VariableChain {
 
 	private List<String> chain;
+	private Object value;
 
-	public VariableChain(List<String> chain) {
+	public VariableChain(List<String> chain, Object value) {
 		this.chain = chain;
+		this.value = value;
 	}
 
-	public Object resolve(Object object) {
+	public Object resolve() {
 		for (String name : chain) {
-			object = resolveInternal(object, name);
+			if (value == null) {
+				return null;
+			} else {
+				value = resolveInternal(name);
+			}
 		}
-		return object;
+		return value;
 	}
 
-	private Object resolveInternal(Object object, String name) {
-		if (isIndex(object, name)) {
-			return resolveIndex(object, name);
-		}
-		
-		if (isMember(object, name)) {
-			return resolveMember(object, name);
-		}
-
-		if (isProperty(object, name)) {
-			return resolveProperty(object, name);
-		}
-		
-		if (isMappedProperty(object, name)) {
-			return resolveMappedProperty(object, name);
-		}
-
-		if (isMethod(object, name)) {
-			return invokeMethod(object, name);
-		}
-		
-		return "";
-	}
-
-	private boolean isIndex(Object object, String name) {
+	private Object resolveInternal(String name) {
+		// field
+		Class<?> clazz = value.getClass();
 		try {
-			Integer.parseInt(name);
-		} catch (NumberFormatException e) {
-			return false;
+			Field field = clazz.getDeclaredField(name);
+			return field.get(value);
+		} catch (Exception e1) {
+			// method
+			Method mth1 = null;
+			try {
+				mth1 = clazz.getDeclaredMethod(name);
+			} catch( NoSuchMethodException e) {
+				String uname = upperFirst(name);
+				try {
+					mth1 = clazz.getDeclaredMethod("get" + uname);
+//					mth1.setAccessible(array, flag)
+				} catch (NoSuchMethodException e2) {
+					try {
+						mth1 = clazz.getDeclaredMethod("is" + uname);
+					} catch (NoSuchMethodException e3) {
+						//nothing;
+					}
+				}
+			} catch (SecurityException e) {
+				//nothing
+			}
+			if ( mth1 != null ) {
+				try {
+					return mth1.invoke(value);
+				} catch (Exception e) {
+					JangodLogger.log(Level.SEVERE, "resolve variable trigger error.", e.getCause());
+				}
+			}
+//			Method[] mths = clazz.getDeclaredMethods();
+//			for (Method mth : mths) {
+//				if (mth.getParameterTypes().length != 0
+//						|| !Modifier.isPublic(mth.getModifiers())) {
+//					continue;
+//				}
+//				if (name.equalsIgnoreCase(mth.getName())
+//						|| ("get" + name).equalsIgnoreCase(mth.getName())
+//						|| ("is" + name).equalsIgnoreCase(mth.getName())) {
+//					try {
+//						return mth.invoke(value);
+//					} catch (InvocationTargetException e) {
+//						JangodLogger.log(Level.SEVERE, "resolve variable trigger error.", e.getCause());
+//					} catch (Exception e) {
+//						continue;
+//					}
+//				}
+//			}
 		}
-		
-		return object.getClass().isArray();
+
+		// map
+		if (value instanceof Map) {
+			Map<?, ?> map = (Map<?, ?>) value;
+			if (map.containsKey(name)) {
+				return map.get(name);
+			}
+		}
+
+		// array
+		if (value.getClass().isArray()) {
+			try {
+				return Array.get(value, Integer.parseInt(name));
+			} catch (Exception e) {
+				// nothing;
+			}
+		}
+		// list
+		if (value instanceof List) {
+			try {
+				return ((List<?>) value).get(Integer.parseInt(name));
+			} catch (Exception e) {
+				// nothing;
+			}
+		}
+
+		return null;
 	}
 	
-	private Object resolveIndex(Object object, String name) {
-		int index = Integer.parseInt(name);
-		return Array.get(object, index);
-	}
-
-	private boolean isMember(Object object, String name) {
-		// special case for arrays
-		if (object.getClass().isArray() && name.equals("length")) {
-			return true;
-		}
-		
-		try {
-			object.getClass().getField(name);
-			return true;
-		} catch (SecurityException e) {
-			return false;
-		} catch (NoSuchFieldException e) {
-			return false;
-		}
-	}
-
-	private Object resolveMember(Object object, String name) {
-		// special case for arrays
-		if (object.getClass().isArray() && name.equals("length")) {
-			return Array.getLength(object);
-		}
-		
-		try {
-			Field field = object.getClass().getField(name);
-			return field.get(object);
-		} catch (SecurityException e) {
-			return "";
-		} catch (NoSuchFieldException e) {
-			return "";
-		} catch (IllegalArgumentException e) {
-			return "";
-		} catch (IllegalAccessException e) {
-			return "";
-		}
-	}
-
-	private boolean isProperty(Object object, String name) {
-		return PropertyUtils.isReadable(object, name);
-	}
-
-	private Object resolveProperty(Object object, String name) {
-		try {
-			return PropertyUtils.getSimpleProperty(object, name);
-		} catch (IllegalAccessException e) {
-			return "";
-		} catch (InvocationTargetException e) {
-			return "";
-		} catch (NoSuchMethodException e) {
-			return "";
-		}
-	}
-
-	private boolean isMappedProperty(Object object, String name) {
-		return Map.class.isAssignableFrom(object.getClass());
-	}
-
-	private Object resolveMappedProperty(Object object, String name) {
-		Map<?,?> map = (Map<?,?>)object;
-		if (map.containsKey(name)) {
-			return map.get(name);
-		}
-		
-		return ""; // TODO find out if this is the correct behaviour
-	}
-	
-	private boolean isMethod(Object object, String name) {
-		try {
-			object.getClass().getMethod(name);
-			return true;
-		} catch (SecurityException e) {
-			return false;
-		} catch (NoSuchMethodException e) {
-			return false;
-		}
-	}
-
-	private Object invokeMethod(Object object, String name) {
-		try {
-			return object.getClass().getMethod(name).invoke(object);
-		} catch (IllegalArgumentException e) {
-			return "";
-		} catch (SecurityException e) {
-			return "";
-		} catch (IllegalAccessException e) {
-			return "";
-		} catch (InvocationTargetException e) {
-			return "";
-		} catch (NoSuchMethodException e) {
-			return "";
+	private String upperFirst(String name) {
+		char c = name.charAt(0);
+		if ( Character.isLowerCase(c) ) {
+			return String.valueOf(c).toUpperCase().concat(name.substring(1));
+		} else {
+			return name;
 		}
 	}
 

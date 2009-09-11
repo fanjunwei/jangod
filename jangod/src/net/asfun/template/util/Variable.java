@@ -6,7 +6,7 @@ import java.util.List;
 public class Variable {
 
 	private String name;
-	private VariableChain chain;
+	private List<String> chainList;
 	
 	public Variable(String variable) {
 		split(variable);
@@ -15,17 +15,15 @@ public class Variable {
 	private void split(String variable) {
 		if (!variable.contains(".")) {
 			name = variable;
-			chain = null;
+			chainList = null;
 			return;
 		}
 		
 		String[] parts = variable.split("\\.");
-		
-		List<String> chainList = Arrays.asList(parts);
+		name = parts[0];
+		chainList = Arrays.asList(parts);
 		chainList = chainList.subList(1, chainList.size());
 		
-		name = parts[0];
-		chain = new VariableChain(chainList);
 	}
 
 	public String getName() {
@@ -33,7 +31,11 @@ public class Variable {
 	}
 
 	public Object resolve(Object value) {
-		return chain == null ? value : chain.resolve(value);
+		if ( chainList != null ) {
+			return new VariableChain(chainList, value).resolve();
+		} else {
+			return value;
+		}
 	}
 	
 	@Override

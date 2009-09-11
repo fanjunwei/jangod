@@ -34,7 +34,7 @@ public class AbsFilterTest extends ZzzBase{
 	
 	@Test
 	public void testFloat() throws CompilerException {
-		Object res = filter.filter(new Double(-20.24), compiler, new String[]{"abc","edf"});
+		Object res = filter.filter(new Double(-20.24), compiler, "abc", "edf");
 		assertEquals(20.24f, (Double)res, 0.01f);
 	}
 	

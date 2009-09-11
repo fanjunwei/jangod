@@ -6,8 +6,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.commons.collections.iterators.ArrayIterator;
-
 
 public class ObjectIterator {
 	

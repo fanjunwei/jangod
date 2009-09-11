@@ -18,6 +18,7 @@ public class ObjectIteratorTest {
 	@Test
 	public void test1() {
 		loop = ObjectIterator.getLoop(items);
+		assertEquals(false,loop.hasNext());
 		assertEquals(0,loop.getLength());
 	}
 	
@@ -50,6 +51,8 @@ public class ObjectIteratorTest {
 		loop = ObjectIterator.getLoop(items);
 		assertEquals(2,loop.getLength());
 		assertEquals("jan", loop.next());
+		assertEquals("god", loop.next());
+		assertEquals("god", loop.next());
 	}
 	
 	@Test

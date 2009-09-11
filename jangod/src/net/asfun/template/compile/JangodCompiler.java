@@ -1,17 +1,17 @@
 package net.asfun.template.compile;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.script.ScriptContext;
-
-import org.apache.commons.collections.MapIterator;
-import org.apache.commons.collections.map.ListOrderedMap;
 
 import static net.asfun.template.util.logging.JangodLogger;
 import net.asfun.template.Configuration;
 import net.asfun.template.bin.FloorBindings;
 import net.asfun.template.parse.JangodParser;
+import net.asfun.template.util.ListOrderedMap;
 import net.asfun.template.util.Variable;
+import net.asfun.template.util.ListOrderedMap.Item;
 
 public class JangodCompiler {
 	
@@ -65,15 +65,16 @@ public class JangodCompiler {
 			StringBuilder sb = new StringBuilder(context.getAttribute(SEMI_RENDER).toString());
 			//replace the block identify with block content
 			ListOrderedMap blockList = (ListOrderedMap) fetchEngineScope(BLOCK_LIST);
-			MapIterator mi = blockList.mapIterator();
+			Iterator<Item> mi = blockList.iterator();
 			int index;
 			String replace;
+			Item item;
 			while( mi.hasNext() ) {
-				mi.next();
-				replace = SEMI_BLOCK + mi.getKey();
+				item = mi.next();
+				replace = SEMI_BLOCK + item.getKey();
 				while ( (index = sb.indexOf(replace)) > 0 ) {
 					sb.delete(index, index + replace.length());
-					sb.insert(index, mi.getValue());
+					sb.insert(index, item.getValue());
 				}
 			}
 			return sb.toString();
