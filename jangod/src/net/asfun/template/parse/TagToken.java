@@ -56,6 +56,7 @@ public class TagToken extends Token {
 		return helpers;
 	}
 	
+	@Override
 	public String toString() {
 		if ( helpers.length() == 0) {
 			return "[TAG]\r\n" + tagName;

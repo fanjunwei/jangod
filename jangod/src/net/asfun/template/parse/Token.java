@@ -32,6 +32,7 @@ public abstract class Token{
 		return image;
 	}
 	
+	@Override
 	public String toString() {
 		return image;
 	}

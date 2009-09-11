@@ -63,6 +63,7 @@ public class EchoToken extends Token {
 		fp.parse();
 	}
 
+	@Override
 	public String toString() {
 		String s = "[VAR]\r\n" + fp.getVariable();
 		int i,j;

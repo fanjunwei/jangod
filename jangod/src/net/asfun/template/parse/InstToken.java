@@ -58,6 +58,7 @@ public class InstToken extends Token {
 		return helpers;
 	}
 	
+	@Override
 	public String toString() {
 		if ( helpers.length() == 0) {
 			return "[INST]\r\n" + instName;

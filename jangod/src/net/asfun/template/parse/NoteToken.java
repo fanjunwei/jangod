@@ -36,6 +36,7 @@ public class NoteToken extends Token {
 //		content = "";
 	}
 	
+	@Override
 	public String toString() {
 		return "[NOTE]";
 	}
